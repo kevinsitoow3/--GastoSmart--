@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Principal - GastoSmart</title>
+    
+    <!-- Estilos base -->
+    <link rel="stylesheet" href="/static/css/base/reset.css?v=DEV">
+    <link rel="stylesheet" href="/static/css/base/base.css?v=DEV">
+    <link rel="stylesheet" href="/static/css/base/responsive.css?v=DEV">
+    
+    <!-- Estilos específicos para el dashboard -->
+    <link rel="stylesheet" href="/static/css/main/dashboard-main.css?v=DEV">
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Mobile menu functionality -->
+    <script src="/static/js/mobile-menu.js?v=DEV"></script>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+        <span class="mobile-menu-toggle__line"></span>
+        <span class="mobile-menu-toggle__line"></span>
+        <span class="mobile-menu-toggle__line"></span>
+    </button>
+    
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <div class="dashboard">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="sidebar__logo">
+            <div class="sidebar__logo-icon">G</div>
+            <span class="sidebar__logo-text">GastoSmart</span>
+        </div>
+        
+        <!-- Navegación -->
+        <nav class="sidebar__nav">
+            <ul class="sidebar__nav-list">
+                <li class="sidebar__nav-item">
+                    <a href="/dashboard" class="sidebar__nav-link sidebar__nav-link--active">
+                        <svg class="sidebar__nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                        </svg>
+                        <span class="sidebar__nav-text">Panel Principal</span>
+                    </a>
+                </li>
+                <li class="sidebar__nav-item">
+                    <a href="/budget" class="sidebar__nav-link">
+                        <svg class="sidebar__nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        <span class="sidebar__nav-text">Ingresos/Gastos</span>
+                    </a>
+                </li>
+                <li class="sidebar__nav-item">
+                    <a href="/goals" class="sidebar__nav-link">
+                        <svg class="sidebar__nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        <span class="sidebar__nav-text">Metas</span>
+                    </a>
+                </li>
+                <li class="sidebar__nav-item">
+                    <a href="/reports" class="sidebar__nav-link">
+                        <svg class="sidebar__nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="sidebar__nav-text">Reportes</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Ajustes al final del menú -->
+        <div class="sidebar__settings">
+            <a href="/settings" class="sidebar__nav-link">
+                <svg class="sidebar__nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span class="sidebar__nav-text">Ajustes</span>
+            </a>
+        </div>
+        
+        <!-- Footer del sidebar -->
+        <div class="sidebar__footer">
+            <div class="sidebar__user">
+                <div class="sidebar__user-avatar" id="userAvatar">U</div>
+                <div class="sidebar__user-info">
+                    <p class="sidebar__user-name" id="userName">Usuario</p>
+                    <p class="sidebar__user-email" id="userEmail">usuario@email.com</p>
+                </div>
+            </div>
+            <button class="sidebar__logout" id="logoutBtn">
+                <svg class="sidebar__logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span>Cerrar sesión</span>
+            </button>
+        </div>
+    </aside>
+    
+    <!-- Topbar -->
+    <header class="topbar" id="topbar">
+        <div class="topbar__left">
+            <h1 class="topbar__title">GastoSmart</h1>
+            <div class="topbar__budget" id="budgetDisplay">
+                <span class="topbar__budget-label">Presupuesto:</span>
+                <span class="topbar__budget-amount" id="budgetAmount">$2.500.000</span>
+            </div>
+        </div>
+        
+        <div class="topbar__right">
+            <!-- Notificaciones -->
+            <button class="topbar__notifications" id="notificationsBtn">
+                <svg class="topbar__notifications-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <span class="topbar__notifications-badge" id="notificationsBadge" style="display: none;">0</span>
+            </button>
+            
+            <!-- Usuario -->
+            <div class="topbar__user" id="topbarUser">
+                <div class="topbar__user-avatar" id="topbarUserAvatar">U</div>
+                <div class="topbar__user-info">
+                    <p class="topbar__user-name" id="topbarUserName">Usuario</p>
+                    <p class="topbar__user-role">Usuario</p>
+                </div>
+                <svg class="topbar__user-dropdown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="dashboard" id="dashboardMain">
+        <div class="dashboard__container">
+            <!-- Grid de tarjetas KPI -->
+            <div class="dashboard__grid">
+                <!-- Saldo Total -->
+                <div class="dashboard__card dashboard__card--balance">
+                    <div class="card__header">
+                        <div>
+                            <h3 class="card__title">Saldo Total</h3>
+                            <div class="card__meta" id="balanceChange">
+                                <span class="card__badge card__badge--success">+3.2%</span>
+                            </div>
+                        </div>
+                        <svg class="card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <div class="card__content">
+                        <div class="card__value card__value--large" id="totalBalance">CO $1.250.000</div>
+                        <div class="card__description">
+                            <div class="balance-details">
+                                <div class="balance-item balance-item--income">
+                                    <span>Ingreso</span>
+                                    <span id="totalIncome">$1.800.000</span>
+                                </div>
+                                <div class="balance-item balance-item--expense">
+                                    <span>Gasto</span>
+                                    <span id="totalExpenses">$550.000</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__progress">
+                            <div class="card__progress-bar" id="budgetProgress" style="width: 30%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ahorro Total -->
+                <div class="dashboard__card dashboard__card--savings">
+                    <div class="card__header">
+                        <div>
+                            <h3 class="card__title">Ahorro Total</h3>
+                            <div class="card__meta">
+                                <span class="card__badge card__badge--success">+1.8%</span>
+                            </div>
+                        </div>
+                        <svg class="card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                    <div class="card__content">
+                        <div class="card__value card__value--medium" id="totalSavings">CO $350.000</div>
+                        <div class="card__description">Tendencia de ahorro mensual</div>
+                        <div class="savings-chart">
+                            <canvas id="savingsChart" width="200" height="80"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Meta Principal -->
+                <div class="dashboard__card dashboard__card--goal">
+                    <div class="card__header">
+                        <h3 class="card__title">Meta Principal</h3>
+                        <svg class="card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                    <div class="card__content" id="goalContent">
+                        <div class="goal-info">
+                            <h4 class="goal-name" id="goalName">Viaje a Cartagena</h4>
+                            <div class="goal-amounts">
+                                <span class="goal-saved" id="goalSaved">$650.000</span>
+                                <span class="goal-separator">/</span>
+                                <span class="goal-target" id="goalTarget">$1.000.000</span>
+                            </div>
+                        </div>
+                        <div class="card__progress">
+                            <div class="card__progress-bar" id="goalProgress" style="width: 65%;"></div>
+                        </div>
+                        <div class="card__description" id="goalDescription">
+                            65% alcanzado
+                        </div>
+                        <div class="card__description" id="goalRemainingText">
+                            Faltan <span id="goalRemaining">$350.000</span> para completar
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Descripción de Gastos -->
+                <div class="dashboard__card dashboard__card--expenses">
+                    <div class="card__header">
+                        <h3 class="card__title">Descripción de los Gastos</h3>
+                        <svg class="card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div class="card__content">
+                        <div class="expenses-chart">
+                            <canvas id="expensesChart" width="200" height="200"></canvas>
+                        </div>
+                        <div class="expenses-legend" id="expensesLegend">
+                            <!-- Leyenda generada dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Botón flotante para agregar gasto -->
+    <button class="dashboard-btn dashboard-btn--floating dashboard-btn--add-expense" id="addExpenseBtn" title="Agregar Gasto">
+        <svg class="dashboard-btn__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+    </button>
+    
+    <!-- Scripts -->
+    <script src="/static/js/auth.js?v=DEV"></script>
+    <script src="/static/js/dashboard.js?v=DEV"></script>
+    
+    <script>
+        // Inicialización del dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Proteger la página
+            if (window.AuthSystem && window.AuthSystem.requireAuth) {
+                if (!window.AuthSystem.requireAuth('/login', false)) {
+                    return;
+                } else {
+                    // Usuario autenticado, actualizar UI
+                    if (window.AuthSystem.updateUserUI) {
+                        window.AuthSystem.updateUserUI();
+                    }
+                }
+            } else {
+                console.error('AuthSystem no está disponible');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Inicializar dashboard
+            if (window.DashboardSystem) {
+                window.DashboardSystem.init();
+            }
+            
+            // Configurar sidebar móvil
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebarToggle && sidebar && sidebarOverlay) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('sidebar--mobile-open');
+                    sidebarOverlay.classList.toggle('sidebar__overlay--active');
+                });
+                
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('sidebar--mobile-open');
+                    sidebarOverlay.classList.remove('sidebar__overlay--active');
+                });
+            }
+            
+            // Configurar logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Mostrar confirmación
+                    if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                        // Usar la función logout del sistema de autenticación
+                        if (typeof logout === 'function') {
+                            logout(true); // true para redirigir automáticamente
+                        } else {
+                            // Fallback si no está disponible la función
+                            localStorage.clear();
+                            sessionStorage.clear();
+                            window.location.href = 'login.html';
+                        }
+                    }
+                });
+            }
+            
+            // Configurar botón flotante de agregar gasto
+            const addExpenseBtn = document.getElementById('addExpenseBtn');
+            if (addExpenseBtn) {
+                addExpenseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Redirigir a la página de presupuesto para agregar gasto
+                    window.location.href = 'initial-budget.html';
+                });
+            }
+        });
+    </script>
+    
+    <!-- Charts JavaScript -->
+    <script src="/static/js/charts.js?v=DEV"></script>
+    
+    <!-- Responsive JavaScript -->
+    <script src="/static/js/responsive.js?v=DEV"></script>
+        </div>
+    </div>
+</body>
+</html>

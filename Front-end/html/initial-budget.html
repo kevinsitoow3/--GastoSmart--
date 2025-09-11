@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GastoSmart — Configurar Presupuesto Inicial</title>
+  <!-- Estilos base -->
+  <link rel="stylesheet" href="/static/css/base/reset.css?v=DEV">
+  <link rel="stylesheet" href="/static/css/base/base.css?v=DEV">
+  <link rel="stylesheet" href="/static/css/base/responsive.css?v=DEV">
+  
+  <!-- Estilos específicos para configuración inicial -->
+  <link rel="stylesheet" href="/static/css/main/auth-styles.css?v=DEV">
+  <link rel="stylesheet" href="/static/css/pages/initial-budget.css?v=DEV">
+</head>
+<body>
+  <main class="container budget-setup-container">
+    <!-- Formulario (izquierda) -->
+    <div class="budget-setup__form">
+          <div class="form-container">
+            <h2>Configuremos tu Presupuesto</h2>
+            <p class="form-subtitle">Para comenzar, necesitamos conocer tus ingresos y metas financieras</p>
+            
+            <form id="budgetForm" class="budget-form">
+              <!-- Sección de Ingresos -->
+              <div class="form-section">
+                <h3>💰 Ingresos</h3>
+                
+                <div class="input-group">
+                  <label for="incomeAmount">Ingresa tu salario mensual</label>
+                  <div class="currency-input-group">
+                    <div class="currency-prefix" aria-hidden="true">
+                      <span class="currency-symbol">COP $</span>
+                    </div>
+                    <input type="text" id="incomeAmount" name="incomeAmount" placeholder="1,500,000" class="currency-input" required aria-describedby="income-help">
+                  </div>
+                  <small class="input-help" id="income-help">Monto mínimo: $100,000 COP</small>
+                </div>
+
+                <div class="input-group">
+                  <label for="payFrequency">Frecuencia de pago</label>
+                  <select id="payFrequency" name="payFrequency">
+                    <option value="monthly">Mensual</option>
+                    <option value="biweekly">Quincenal</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Sección de Metas -->
+              <div class="form-section">
+                <h3>🎯 Meta Financiera</h3>
+                <p class="section-subtitle">¿Qué te gustaría lograr con tu dinero?</p>
+                
+                <div class="goals-grid">
+                  <label class="goal-card">
+                    <input type="radio" name="goal" value="emergency" onclick="onGoalSelected('emergency')">
+                    <div class="goal-content">
+                      <div class="goal-icon">🚨</div>
+                      <h4>Fondo de Emergencia</h4>
+                      <p>Ahorrar para imprevistos</p>
+                    </div>
+                  </label>
+                  
+                  <label class="goal-card">
+                    <input type="radio" name="goal" value="vacation" onclick="onGoalSelected('vacation')">
+                    <div class="goal-content">
+                      <div class="goal-icon">✈️</div>
+                      <h4>Vacaciones</h4>
+                      <p>Planificar tu próximo viaje</p>
+                    </div>
+                  </label>
+                  
+                  <label class="goal-card">
+                    <input type="radio" name="goal" value="house" onclick="onGoalSelected('house')">
+                    <div class="goal-content">
+                      <div class="goal-icon">🏠</div>
+                      <h4>Comprar Casa</h4>
+                      <p>Ahorrar para vivienda propia</p>
+                    </div>
+                  </label>
+                  
+                  <label class="goal-card">
+                    <input type="radio" name="goal" value="education" onclick="onGoalSelected('education')">
+                    <div class="goal-content">
+                      <div class="goal-icon">📚</div>
+                      <h4>Educación</h4>
+                      <p>Invertir en tu formación</p>
+                    </div>
+                  </label>
+                  
+                  <label class="goal-card">
+                    <input type="radio" name="goal" value="other" onclick="onGoalSelected('other')">
+                    <div class="goal-content">
+                      <div class="goal-icon">✨</div>
+                      <h4>Otro</h4>
+                      <p>Define tu propia meta</p>
+                    </div>
+                  </label>
+                </div>
+                
+                <!-- Campos adicionales para metas predefinidas -->
+                <div class="goal-details-subform" id="goalDetailsInput" style="display: none;">
+                  <div class="subform-header">
+                    <h4>Detalles de tu meta</h4>
+                    <p>Especifica tu objetivo y plazo</p>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="goalAmount">Monto objetivo *</label>
+                    <div class="currency-input-group">
+                      <div class="currency-prefix" aria-hidden="true">
+                        <span class="currency-symbol">COP $</span>
+                      </div>
+                      <input type="text" id="goalAmount" name="goalAmount" placeholder="5,000,000" class="currency-input" required aria-describedby="goal-amount-help">
+                    </div>
+                    <small class="input-help" id="goal-amount-help">¿Cuánto quieres ahorrar para esta meta?</small>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="goalTimeframe">Plazo estimado *</label>
+                    <select id="goalTimeframe" name="goalTimeframe" required>
+                      <option value="">Selecciona un plazo</option>
+                      <option value="3">3 meses</option>
+                      <option value="6">6 meses</option>
+                      <option value="12">1 año</option>
+                      <option value="18">1.5 años</option>
+                      <option value="24">2 años</option>
+                      <option value="36">3 años</option>
+                      <option value="60">5 años</option>
+                      <option value="custom">Personalizado</option>
+                    </select>
+                  </div>
+                  
+                  <div class="input-group" id="customTimeframeGroup" style="display: none;">
+                    <label for="customTimeframe">Plazo personalizado (meses) *</label>
+                    <input type="number" id="customTimeframe" name="customTimeframe" min="1" max="120" placeholder="24" aria-describedby="custom-timeframe-help">
+                    <small class="input-help" id="custom-timeframe-help">Entre 1 y 120 meses</small>
+                  </div>
+                </div>
+                
+                <!-- Campos adicionales para meta "Otro" -->
+                <div class="other-goal-subform" id="otherGoalInput" style="display: none;">
+                  <div class="subform-header">
+                    <h4>Define tu meta personalizada</h4>
+                    <p>Crea tu objetivo financiero único</p>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="otherGoalName">Nombre de tu meta *</label>
+                    <input type="text" id="otherGoalName" name="otherGoalName" placeholder="Ej: Moto nueva, Negocio propio" maxlength="50" required aria-describedby="otherGoalName-help">
+                    <small class="input-help" id="otherGoalName-help"><span id="nameCounter" aria-live="polite">0</span>/50 caracteres</small>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="otherGoalAmount">Monto objetivo *</label>
+                    <div class="currency-input-group">
+                      <div class="currency-prefix" aria-hidden="true">
+                        <span class="currency-symbol">COP $</span>
+                      </div>
+                      <input type="text" id="otherGoalAmount" name="otherGoalAmount" placeholder="5,000,000" class="currency-input" required aria-describedby="other-goal-amount-help">
+                    </div>
+                    <small class="input-help" id="other-goal-amount-help">¿Cuánto quieres ahorrar para esta meta?</small>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="otherGoalTimeframe">Plazo estimado *</label>
+                    <select id="otherGoalTimeframe" name="otherGoalTimeframe" required>
+                      <option value="">Selecciona un plazo</option>
+                      <option value="3">3 meses</option>
+                      <option value="6">6 meses</option>
+                      <option value="12">1 año</option>
+                      <option value="18">1.5 años</option>
+                      <option value="24">2 años</option>
+                      <option value="36">3 años</option>
+                      <option value="60">5 años</option>
+                      <option value="custom">Personalizado</option>
+                    </select>
+                  </div>
+                  
+                  <div class="input-group" id="otherCustomTimeframeGroup" style="display: none;">
+                    <label for="otherCustomTimeframe">Plazo personalizado (meses) *</label>
+                    <input type="number" id="otherCustomTimeframe" name="otherCustomTimeframe" min="1" max="120" placeholder="24" aria-describedby="other-custom-timeframe-help">
+                    <small class="input-help" id="other-custom-timeframe-help">Entre 1 y 120 meses</small>
+                  </div>
+                  
+                  <div class="subform-actions">
+                    <button type="button" class="btn btn--secondary" id="cancelOtherGoal" onclick="cancelOtherGoal()">Cancelar</button>
+                  </div>
+                </div>
+                
+
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" id="submitBudgetBtn" class="btn btn--primary btn--full" 
+                        aria-label="Enviar información del presupuesto" 
+                        onclick="onGenerateInitialBudget()">
+                  <span class="btn-text">Enviar</span>
+                  <span class="btn-spinner" style="display: none;"></span>
+                </button>
+              </div>
+            </form>
+
+            <!-- Sección de Ajuste de Presupuesto (oculta inicialmente) -->
+            <div id="budgetAdjustment" class="budget-adjustment" style="display: none;">
+              <h2>Ajusta tu Presupuesto</h2>
+              <p class="form-subtitle">Puedes modificar los porcentajes según tus necesidades. La suma debe ser 100%.</p>
+              
+              <div class="budget-categories">
+                <div class="category-item">
+                  <div class="category-header">
+                    <div class="category-info">
+                      <h4>🏠 Necesidades Básicas</h4>
+                      <p>Vivienda, alimentación, transporte, servicios básicos</p>
+                    </div>
+                    <div class="category-amount">
+                      <span id="necesidadesAmount">$0</span>
+                    </div>
+                  </div>
+                  <div class="category-controls">
+                    <input type="range" id="necesidadesSlider" min="0" max="100" value="50" class="category-slider">
+                    <div class="percentage-input">
+                      <input type="number" id="necesidadesPercentage" min="0" max="100" value="50">%
+                    </div>
+                  </div>
+                </div>
+
+                <div class="category-item">
+                  <div class="category-header">
+                    <div class="category-info">
+                      <h4>🎯 Gastos Personales</h4>
+                      <p>Entretenimiento, comidas fuera, compras personales</p>
+                    </div>
+                    <div class="category-amount">
+                      <span id="deseosAmount">$0</span>
+                    </div>
+                  </div>
+                  <div class="category-controls">
+                    <input type="range" id="deseosSlider" min="0" max="100" value="30" class="category-slider">
+                    <div class="percentage-input">
+                      <input type="number" id="deseosPercentage" min="0" max="100" value="30">%
+                    </div>
+                  </div>
+                </div>
+
+                <div class="category-item">
+                  <div class="category-header">
+                    <div class="category-info">
+                      <h4>💰 Ahorros y Metas</h4>
+                      <p>Fondo de emergencia, inversiones, metas financieras</p>
+                    </div>
+                    <div class="category-amount">
+                      <span id="ahorrosAmount">$0</span>
+                    </div>
+                  </div>
+                  <div class="category-controls">
+                    <input type="range" id="ahorrosSlider" min="0" max="100" value="20" class="category-slider">
+                    <div class="percentage-input">
+                      <input type="number" id="ahorrosPercentage" min="0" max="100" value="20">%
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="budget-summary">
+                <div class="total-percentage">
+                  <span>Total: </span>
+                  <span id="totalPercentage" class="total-value">100%</span>
+                </div>
+                <div class="validation-message" id="validationMessage"></div>
+              </div>
+
+              <!-- Separador antes del CTA -->
+              <div class="cta-separator"></div>
+              
+              <!-- Botón de acción principal -->
+              <div class="form-cta">
+                <button type="button" id="generateBudgetBtn" class="btn btn--primary btn--full" 
+                        aria-label="Generar mi presupuesto inicial" 
+                        onclick="onGenerateInitialBudget()">
+                  <span class="btn-text">Generar mi Presupuesto</span>
+                  <span class="btn-spinner" style="display: none;"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Panel verde decorativo (derecha) -->
+    <div class="budget-setup__green-panel"></div>
+  </main>
+
+  <script src="/static/js/auth.js?v=DEV"></script>
+    <script src="/static/js/initial-budget.js?v=DEV"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+/* ===== ESTILOS PRINCIPALES PARA EL DASHBOARD ===== */
+/* Este archivo contiene únicamente los estilos para el dashboard y sus páginas */
+/* Completamente separado de los estilos de autenticación */
+
+/* === Tokens === */
+@import url("../tokens/colors.css");
+@import url("../tokens/spacing.css");
+
+/* === Base === */
+@import url("../base/reset.css");
+@import url("../base/base.css");
+@import url("../base/responsive.css");
+
+/* === Layout del dashboard === */
+@import url("../layout/grid.css");
+@import url("../layout/navbar.css");
+@import url("../layout/sidebar.css");
+
+/* === Componentes del dashboard === */
+@import url("../components/button.css");
+@import url("../components/card.css");
+@import url("../components/form.css");
+@import url("../components/chart.css");
+@import url("../components/goalbar.css");
+@import url("../components/modal.css");
+@import url("../components/table.css");
+
+/* === Páginas del dashboard === */
+@import url("../pages/dashboard.css");
+@import url("../pages/budget.css");
+@import url("../pages/goals.css");
+@import url("../pages/reports.css");
+@import url("../pages/settings.css");
+
+/* === Estilos específicos para el dashboard === */
+.dashboard-container {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Asegurar que el dashboard ocupe toda la pantalla */
+.dashboard {
+    height: 100vh;
+    min-height: 100vh;
+}
+
+/* Media queries para móviles - dashboard */
+@media (max-width: 768px) {
+    .dashboard-container, .dashboard {
+        height: 100vh !important;
+        min-height: 100vh !important;
+    }
+}

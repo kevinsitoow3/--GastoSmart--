@@ -1,0 +1,40 @@
+:root {
+  /* Espaciado base */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Espaciado específico */
+  --spacing-0: 0;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+
+  /* Márgenes y padding comunes */
+  --margin-auto: auto;
+  --padding-container: var(--spacing-md);
+  --padding-section: var(--spacing-lg);
+  --padding-card: var(--spacing-md);
+
+  /* Espaciado para formularios */
+  --form-spacing: var(--spacing-md);
+  --input-padding: var(--spacing-sm) var(--spacing-md);
+  --button-padding: var(--spacing-sm) var(--spacing-lg);
+
+  /* Espaciado para grid y layout */
+  --grid-gap: var(--spacing-md);
+  --section-gap: var(--spacing-2xl);
+}

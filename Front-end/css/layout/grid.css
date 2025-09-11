@@ -1,0 +1,272 @@
+/* ==========================================================================
+   Grid Layout System
+   ========================================================================== */
+
+/* Container base */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.container--fluid {
+    max-width: none;
+}
+
+.container--narrow {
+    max-width: 800px;
+}
+
+/* Grid system */
+.grid {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.grid--2-cols {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid--3-cols {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid--4-cols {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Dashboard specific grid */
+.dashboard__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--spacing-lg);
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Grid areas para dashboard */
+.dashboard__card--balance {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.dashboard__card--savings {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.dashboard__card--goal {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.dashboard__card--expenses {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+/* Flexbox utilities */
+.flex {
+    display: flex;
+}
+
+.flex--column {
+    flex-direction: column;
+}
+
+.flex--row {
+    flex-direction: row;
+}
+
+.flex--wrap {
+    flex-wrap: wrap;
+}
+
+.flex--nowrap {
+    flex-wrap: nowrap;
+}
+
+/* Justify content */
+.justify--start {
+    justify-content: flex-start;
+}
+
+.justify--center {
+    justify-content: center;
+}
+
+.justify--end {
+    justify-content: flex-end;
+}
+
+.justify--between {
+    justify-content: space-between;
+}
+
+.justify--around {
+    justify-content: space-around;
+}
+
+.justify--evenly {
+    justify-content: space-evenly;
+}
+
+/* Align items */
+.align--start {
+    align-items: flex-start;
+}
+
+.align--center {
+    align-items: center;
+}
+
+.align--end {
+    align-items: flex-end;
+}
+
+.align--stretch {
+    align-items: stretch;
+}
+
+.align--baseline {
+    align-items: baseline;
+}
+
+/* Gap utilities */
+.gap--xs {
+    gap: var(--spacing-xs);
+}
+
+.gap--sm {
+    gap: var(--spacing-sm);
+}
+
+.gap--md {
+    gap: var(--spacing-md);
+}
+
+.gap--lg {
+    gap: var(--spacing-lg);
+}
+
+.gap--xl {
+    gap: var(--spacing-xl);
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1023px) {
+    .dashboard__grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: var(--spacing-md);
+    }
+    
+    .dashboard__card--balance {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+    
+    .dashboard__card--savings {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    
+    .dashboard__card--expenses {
+        grid-column: 2;
+        grid-row: 2;
+    }
+    
+    .dashboard__card--goal {
+        grid-column: 1 / -1;
+        grid-row: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .grid--2-cols,
+    .grid--3-cols,
+    .grid--4-cols {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard__grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        gap: var(--spacing-md);
+    }
+    
+    .dashboard__card--balance,
+    .dashboard__card--savings,
+    .dashboard__card--expenses,
+    .dashboard__card--goal {
+        grid-column: 1;
+    }
+    
+    .dashboard__card--balance {
+        grid-row: 1;
+    }
+    
+    .dashboard__card--savings {
+        grid-row: 2;
+    }
+    
+    .dashboard__card--expenses {
+        grid-row: 3;
+    }
+    
+    .dashboard__card--goal {
+        grid-row: 4;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .dashboard__grid {
+        gap: var(--spacing-sm);
+    }
+    
+    .grid {
+        gap: var(--spacing-sm);
+    }
+}
+
+/* Auto-fit grids */
+.grid--auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid--auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+/* Grid item utilities */
+.grid-item--span-2 {
+    grid-column: span 2;
+}
+
+.grid-item--span-3 {
+    grid-column: span 3;
+}
+
+.grid-item--span-4 {
+    grid-column: span 4;
+}
+
+.grid-item--full {
+    grid-column: 1 / -1;
+}
+
+/* Responsive grid item utilities */
+@media (max-width: 768px) {
+    .grid-item--span-2,
+    .grid-item--span-3,
+    .grid-item--span-4 {
+        grid-column: span 1;
+    }
+}

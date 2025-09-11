@@ -1,0 +1,248 @@
+/* ===== Pantalla Crear Cuenta — Responsive y alineada al prototipo ===== */
+
+/* Contenedor específico para signup - los estilos principales están en auth-styles.css */
+.signup-container {
+  display: flex;
+}
+
+
+/* Pantalla completa sin estilo de tarjeta */
+.signup {
+  background: #fff;
+  width: 100%;      /* ocupa todo el ancho */
+  height: 100vh;    /* ocupa toda la altura */
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Grid dos columnas con proporción suave; altura completa */
+.signup__grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  height: 100vh;   /* ocupa toda la pantalla */
+}
+
+
+/* ===== Panel izquierdo (branding + bullets) ===== */
+.signup__left {
+  --green-1: #dff2e7;
+  --green-2: #cbead9;
+  background: linear-gradient(135deg, var(--green-1), var(--green-2));
+  padding: clamp(20px, 3vw, 40px);
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  gap: clamp(16px, 2.2vw, 28px);
+  border-right: 1px solid #dde4e2;
+}
+
+.brand { max-width: 560px; margin: 0 auto; text-align: center; }
+.brand__logo {
+  width: 62px; height: 62px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: #fff; color: #22c55e;
+  box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  margin: 0 auto .5rem auto;
+}
+.brand__title {
+  font-size: clamp(28px, 3.2vw, 36px);
+  line-height: 1.15;
+  margin: .25rem 0 .6rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.brand__subtitle {
+  color: #566070;
+  max-width: 50ch;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* lista de features */
+.features { display: grid; gap: clamp(10px, 1.5vw, 14px); margin:0 auto; padding:0; list-style:none; width: 100%; max-width: 400px; }
+.feature { display: flex; flex-direction: row; gap: 16px; align-items: center; text-align: left; }
+.feature__icon {
+  width:46px; height:46px; border-radius:999px; background:#fff; color:#22c55e;
+  display:grid; place-items:center; box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  flex-shrink: 0;
+}
+.feature__content {
+  display: flex;
+  flex-direction: column;
+}
+.feature__title { font-weight:500; font-size: 1.1rem; text-align: left; margin: 0; }
+.feature__desc  { color:#6b7280; font-size: .98rem; text-align: left; margin: 0; }
+
+/* ===== Panel derecho (formulario) ===== */
+.signup__right {
+  --peach-1: #fff4ea;
+  --peach-2: #ffe6cc;
+  background: linear-gradient(135deg, var(--peach-1), var(--peach-2));
+  padding: clamp(20px, 3vw, 40px);
+  display: grid;
+  align-content: center;
+}
+
+/* Los estilos de formulario ahora se heredan de components/form.css */
+.form--cols { grid-template-columns: 1fr 1fr; column-gap: 14px; }
+
+/* Términos */
+.terms { align-items:center; }
+.checkbox{ display:inline-flex; align-items:center; gap:.55rem; color:#6b7280; }
+.checkbox input{ width:16px; height:16px; }
+
+/* Errores */
+.form__errors{ min-height:20px; color:#b91c1c; font-size:.95rem; margin:0; }
+
+/* Botón personalizado para esta página */
+.btn-primary{
+  width:100%;
+}
+
+/* Link */
+.link{ color:#ea580c; text-decoration:none; }
+.link:hover{ text-decoration:underline; }
+.formwrap__footer{ text-align:center; color:#6b7280; margin-top: 12px; }
+
+/* ===== Breakpoints ===== */
+/* Tablet "media" (todo cómodo, sin apretar) */
+@media (max-width: 1024px){
+  .signup__grid { grid-template-columns: 1fr 1fr; height: 100vh; }
+  .formwrap { max-width: 560px; }
+}
+
+/* Móvil: columnas apiladas y paddings más compactos */
+@media (max-width: 768px){
+  .container { height: 100vh; }
+  .signup { height: 100vh; }
+  .signup__grid { grid-template-columns: 1fr; height: 100vh; }
+  .signup__left { order:2; padding: 20px; border-right:0; border-top:1px solid #e7e7e7; }
+  .signup__right{ order:1; padding: 20px; }
+  .form--cols   { grid-template-columns: 1fr; }
+}
+
+/* Desktop grande: un poco más de aire y tipografía */
+@media (min-width: 1280px){
+  .signup__card { width: min(1240px, 92vw); }
+  .brand__title{ font-size: 38px; }
+}
+
+/* ===== Modal de Verificación ===== */
+.verification-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.verification-modal .modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.verification-modal h3 {
+  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.verification-modal p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.verification-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.verification-form input {
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  text-align: center;
+  letter-spacing: 0.1em;
+  transition: border-color 0.2s;
+}
+
+.verification-form input:focus {
+  outline: none;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.verification-form .btn-primary {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.verification-form .btn-primary:hover {
+  background: #16a34a;
+}
+
+.verification-form .btn-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.verification-form .btn-secondary {
+  background: transparent;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.verification-form .btn-secondary:hover {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.verification-form .btn-secondary:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.verification-modal .error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  min-height: 1.25rem;
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+  .verification-modal .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .verification-modal h3 {
+    font-size: 1.25rem;
+  }
+}

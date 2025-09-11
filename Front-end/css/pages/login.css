@@ -1,0 +1,387 @@
+/* ===== Pantalla Iniciar Sesión — Responsive y alineada al prototipo ===== */
+
+/* Contenedor específico para login - los estilos principales están en auth-styles.css */
+.login-container {
+  display: flex;
+}
+
+/* Pantalla completa sin estilo de tarjeta */
+.login {
+  background: #fff;
+  width: 100%;      /* ocupa todo el ancho */
+  height: 100vh;    /* ocupa toda la altura */
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Grid dos columnas con proporción suave; altura completa */
+.login__grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  height: 100vh;   /* ocupa toda la pantalla */
+}
+
+/* ===== Panel izquierdo (branding + bullets) ===== */
+.login__left {
+  --green-1: #dff2e7;
+  --green-2: #cbead9;
+  background: linear-gradient(135deg, var(--green-1), var(--green-2));
+  padding: clamp(20px, 3vw, 40px);
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  gap: clamp(16px, 2.2vw, 28px);
+  border-right: 1px solid #dde4e2;
+}
+
+/* ===== Panel derecho (formulario) ===== */
+.login__right {
+  --peach-1: #fff4ea;
+  --peach-2: #ffe6cc;
+  background: linear-gradient(135deg, var(--peach-1), var(--peach-2));
+  padding: clamp(20px, 3vw, 40px);
+  display: grid;
+  align-content: center;
+}
+
+/* ===== Mensajes de estado ===== */
+.form__messages {
+  margin-bottom: 1rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.form__messages.success {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.form__messages.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.form__messages.warning {
+  background-color: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fed7aa;
+}
+
+.form__messages.info {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+/* ===== Contador de intentos ===== */
+.attempts-counter {
+  margin-bottom: 1rem;
+  padding: 10px 14px;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ===== Mensaje de bloqueo ===== */
+.lockout-message {
+  margin-bottom: 1rem;
+  padding: 12px 16px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.lockout-message span {
+  font-weight: 700;
+  color: #dc3545;
+}
+
+/* ===== Spinner para botón de carga ===== */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ffffff40;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(255, 90, 0, .35);
+}
+
+/* ===== Modal para recuperación de contraseña ===== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal__content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal__header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.modal__close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal__close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.modal__body {
+  padding: 20px 24px 24px;
+}
+
+.modal__body p {
+  margin: 0 0 16px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* ===== Estados de campos con error ===== */
+.field input.error {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.field input.success {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+}
+
+/* ===== Animaciones de entrada ===== */
+.login__grid {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.formwrap {
+  animation: slideInRight 0.7s ease-out 0.2s both;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.login__left {
+  animation: slideInLeft 0.7s ease-out 0.1s both;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== Breakpoints ===== */
+/* Tablet "media" (todo cómodo, sin apretar) */
+@media (max-width: 1024px) {
+  .login__grid { 
+    grid-template-columns: 1fr 1fr; 
+    height: 100vh; 
+  }
+  .formwrap { 
+    max-width: 560px; 
+  }
+}
+
+/* Móvil: columnas apiladas y paddings más compactos */
+@media (max-width: 768px) {
+  .container { 
+    height: 100vh; 
+  }
+  .login { 
+    height: 100vh; 
+  }
+  .login__grid { 
+    grid-template-columns: 1fr; 
+    height: 100vh; 
+  }
+  .login__left { 
+    order: 2; 
+    padding: 20px; 
+    border-right: 0; 
+    border-top: 1px solid #e7e7e7; 
+  }
+  .login__right { 
+    order: 1; 
+    padding: 20px; 
+  }
+  
+  .modal__content {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .modal__header,
+  .modal__body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Desktop grande: un poco más de aire y tipografía */
+@media (min-width: 1280px) {
+  .brand__title { 
+    font-size: 38px; 
+  }
+  
+  .formwrap {
+    max-width: 640px;
+  }
+}
+
+/* ===== Mejoras de accesibilidad ===== */
+@media (prefers-reduced-motion: reduce) {
+  .login__grid,
+  .formwrap,
+  .login__left,
+  .modal__content {
+    animation: none;
+  }
+  
+  .spinner {
+    animation: none;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+  }
+}
+
+/* ===== Focus states mejorados ===== */
+.modal__close:focus {
+  outline: 2px solid #ff7a18;
+  outline-offset: 2px;
+}
+
+.link:focus {
+  outline: 2px solid #ff7a18;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ===== Estados hover mejorados ===== */
+.link:hover {
+  color: #ea580c;
+  transition: color 0.2s ease;
+}
+
+.feature {
+  transition: transform 0.2s ease;
+}
+
+.feature:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== Indicadores de carga ===== */
+.form.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.form.loading .field input {
+  background-color: #f9fafb;
+}

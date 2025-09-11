@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GastoSmart — Iniciar Sesión</title>
+  <!-- Estilos base -->
+  <link rel="stylesheet" href="/static/css/base/reset.css?v=DEV">
+  <link rel="stylesheet" href="/static/css/base/base.css?v=DEV">
+  <link rel="stylesheet" href="/static/css/base/responsive.css?v=DEV">
+  
+  <!-- Estilos específicos para autenticación -->
+  <link rel="stylesheet" href="/static/css/main/auth-styles.css?v=DEV">
+</head>
+<body>
+  <main class="container login-container">
+    <section class="login">
+      <div class="login__grid">
+        <!-- Panel izquierdo -->
+        <aside class="login__left">
+          <div class="brand">
+            <div class="brand__logo" aria-hidden="true">
+              <!-- Wallet icon -->
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <path d="M21 7h-1V6a2 2 0 0 0-2-2H5a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-4-1a1 1 0 0 1 1 1v1H5a2 2 0 0 1-2-2v-.171A1.83 1.83 0 0 1 4.829 4Zm5 8h-3V9h3Zm-5.5-2.5a1 1 0 1 1-1-1 1 1 0 0 1 1 1Z"/>
+              </svg>
+            </div>
+            <h1 class="brand__title">GastoSmart</h1>
+            <p class="brand__subtitle">
+              Bienvenido de vuelta. Accede a tu cuenta para continuar gestionando tus finanzas de manera inteligente
+            </p>
+          </div>
+
+          <ul class="features" role="list">
+            <li class="feature">
+              <div class="feature__icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <div class="feature__content">
+                <h3 class="feature__title">Acceso Seguro</h3>
+                <p class="feature__desc">Tu información está protegida con encriptación avanzada</p>
+              </div>
+            </li>
+
+            <li class="feature">
+              <div class="feature__icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M12 1a9 9 0 0 0-9 9v3.28l-1.447 3.447A1 1 0 0 0 2.447 18H6a9 9 0 1 0 6-17ZM4 10a8 8 0 1 1 8 8 8.03 8.03 0 0 1-7.06-4H4.447L6 11.72V10Z"/>
+                </svg>
+              </div>
+              <div class="feature__content">
+                <h3 class="feature__title">Sesión Inteligente</h3>
+                <p class="feature__desc">Mantén tu sesión activa de forma segura</p>
+              </div>
+            </li>
+
+            <li class="feature">
+              <div class="feature__icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+              </div>
+              <div class="feature__content">
+                <h3 class="feature__title">Dashboard Personalizado</h3>
+                <p class="feature__desc">Accede a tus reportes y análisis financieros</p>
+              </div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Panel derecho -->
+        <section class="login__right">
+          <div class="formwrap">
+            <h2 class="formwrap__title">INICIAR SESIÓN</h2>
+            <p class="formwrap__subtitle">Ingresa tus credenciales para acceder a tu cuenta</p>
+
+            <!-- Mensajes de estado -->
+            <div id="loginMessages" class="form__messages" style="display: none;"></div>
+
+            <form id="loginForm" class="form">
+              <div class="form__row">
+                <label class="label">
+                  Ingrese su correo:
+                  <div class="field">
+                    <svg class="field__icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      name="email" 
+                      placeholder="youremail@example.com" 
+                      required 
+                      autocomplete="email"
+                    >
+                  </div>
+                </label>
+              </div>
+
+              <div class="form__row">
+                <label class="label">
+                  Ingrese su contraseña:
+                  <div class="field">
+                    <svg class="field__icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                    </svg>
+                    <input 
+                      type="password" 
+                      id="password" 
+                      name="password" 
+                      placeholder="••••••••••••" 
+                      required 
+                      autocomplete="current-password"
+                    >
+                  </div>
+                </label>
+              </div>
+
+              <!-- Contador de intentos (oculto inicialmente) -->
+              <div id="attemptsCounter" class="attempts-counter" style="display: none;">
+                <p id="attemptsText"></p>
+              </div>
+
+              <!-- Mensaje de bloqueo (oculto inicialmente) -->
+              <div id="lockoutMessage" class="lockout-message" style="display: none;">
+                <p>Cuenta bloqueada por múltiples intentos fallidos. Intenta nuevamente en <span id="lockoutTimer">15:00</span> minutos.</p>
+              </div>
+
+              <div class="form__row">
+                <button type="submit" id="loginBtn" class="btn-primary">
+                  <span id="loginBtnText">Entrar</span>
+                  <div id="loginSpinner" class="spinner" style="display: none;"></div>
+                </button>
+              </div>
+            </form>
+
+            <div class="formwrap__footer">
+              <p><a href="#" id="forgotPasswordLink" class="link">¿Olvidé mi contraseña?</a></p>
+              <p>¿No tienes cuenta? <a href="/register" class="link">Crear cuenta</a></p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal para recuperación de contraseña -->
+  <div id="forgotPasswordModal" class="modal" style="display: none;">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h3>Recuperar Contraseña</h3>
+        <button type="button" id="closeForgotModal" class="modal__close">&times;</button>
+      </div>
+      <div class="modal__body">
+        <p>Ingresa tu correo electrónico y te enviaremos un código para restablecer tu contraseña.</p>
+        <form id="forgotPasswordForm">
+          <div class="form__row">
+            <label class="label">
+              Correo electrónico:
+              <div class="field">
+                <svg class="field__icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                <input type="email" id="forgotEmail" name="email" placeholder="tu@correo.com" required>
+              </div>
+            </label>
+          </div>
+          <div id="forgotMessages" class="form__messages" style="display: none;"></div>
+          <button type="submit" class="btn-primary">Enviar Código</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/auth.js?v=DEV"></script>
+  <script src="/static/js/login.js?v=DEV"></script>
+</body>
+</html>
