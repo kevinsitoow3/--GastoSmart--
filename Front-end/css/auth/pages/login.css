@@ -9,7 +9,8 @@
 .login {
   background: #fff;
   width: 100%;      /* ocupa todo el ancho */
-  height: 100vh;    /* ocupa toda la altura */
+  height: 100dvh;   /* ocupa toda la altura */
+  height: 100vh;    /* fallback */
   margin: 0;
   overflow: hidden;
 }
@@ -18,7 +19,11 @@
 .login__grid {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  height: 100vh;   /* ocupa toda la pantalla */
+  height: 100dvh;   /* ocupa toda la pantalla */
+  height: 100vh;    /* fallback */
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* ===== Panel izquierdo (branding + bullets) ===== */
@@ -291,13 +296,16 @@
 /* Móvil: columnas apiladas y paddings más compactos */
 @media (max-width: 768px) {
   .container { 
+    height: 100dvh; 
     height: 100vh; 
   }
   .login { 
+    height: 100dvh; 
     height: 100vh; 
   }
   .login__grid { 
     grid-template-columns: 1fr; 
+    height: 100dvh; 
     height: 100vh; 
   }
   .login__left { 

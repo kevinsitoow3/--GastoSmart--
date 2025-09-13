@@ -10,7 +10,8 @@
 .signup {
   background: #fff;
   width: 100%;      /* ocupa todo el ancho */
-  height: 100vh;    /* ocupa toda la altura */
+  height: 100dvh;   /* ocupa toda la altura */
+  height: 100vh;    /* fallback */
   margin: 0;
   overflow: hidden;
 }
@@ -19,7 +20,11 @@
 .signup__grid {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  height: 100vh;   /* ocupa toda la pantalla */
+  height: 100dvh;   /* ocupa toda la pantalla */
+  height: 100vh;    /* fallback */
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -113,9 +118,9 @@
 
 /* Móvil: columnas apiladas y paddings más compactos */
 @media (max-width: 768px){
-  .container { height: 100vh; }
-  .signup { height: 100vh; }
-  .signup__grid { grid-template-columns: 1fr; height: 100vh; }
+  .container { height: 100dvh; height: 100vh; }
+  .signup { height: 100dvh; height: 100vh; }
+  .signup__grid { grid-template-columns: 1fr; height: 100dvh; height: 100vh; }
   .signup__left { order:2; padding: 20px; border-right:0; border-top:1px solid #e7e7e7; }
   .signup__right{ order:1; padding: 20px; }
   .form--cols   { grid-template-columns: 1fr; }

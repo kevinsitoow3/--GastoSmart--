@@ -40,44 +40,74 @@ app.mount("/static", StaticFiles(directory="../Front-end"), name="static")
 # Ruta para servir el frontend
 @app.get("/")
 async def read_index():
-    return FileResponse("../Front-end/html/index.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/index.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 # Rutas específicas para cada página HTML
 @app.get("/login")
 async def read_login():
-    return FileResponse("../Front-end/html/login.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/login.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/initial-budget")
 async def read_initial_budget():
-    return FileResponse("../Front-end/html/initial-budget.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/initial-budget.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/password-reset")
 async def read_password_reset():
-    return FileResponse("../Front-end/html/password-reset.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/password-reset.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/verify-recovery-code")
 async def read_verify_recovery_code():
-    return FileResponse("../Front-end/html/verify-recovery-code.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/verify-recovery-code.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/dashboard")
 async def read_dashboard():
-    return FileResponse("../Front-end/html/dashboard.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/dashboard.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/budget")
 async def read_budget():
-    return FileResponse("../Front-end/html/budget.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/budget.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/goals")
 async def read_goals():
-    return FileResponse("../Front-end/html/goals.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/goals.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/reports")
 async def read_reports():
-    return FileResponse("../Front-end/html/reports.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/reports.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/settings")
 async def read_settings():
-    return FileResponse("../Front-end/html/settings.html")
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/settings.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 @app.get("/{path:path}")
 async def read_frontend(path: str):

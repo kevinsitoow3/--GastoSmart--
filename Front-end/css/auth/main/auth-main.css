@@ -1,0 +1,131 @@
+/* ===== AUTH - MAIN - AUTH_MAIN.CSS ===== */
+/* Archivo principal que importa todos los estilos necesarios para las páginas de autenticación */
+
+/* === Tokens === */
+@import url("../tokens/colors.css");
+@import url("../tokens/spacing.css");
+
+/* === Base === */
+@import url("../base/reset.css");
+@import url("../base/base.css");
+@import url("../base/responsive.css");
+
+/* === Layout === */
+@import url("../layout/grid.css");
+
+/* === Componentes === */
+@import url("../components/button.css");
+@import url("../components/form.css");
+@import url("../components/modal.css");
+
+/* === Páginas === */
+@import url("../pages/login.css");
+@import url("../pages/index.css"); /* signup.css */
+@import url("../pages/password-reset.css");
+@import url("../pages/verify-recovery-code.css");
+@import url("../pages/initial-budget.css");
+
+/* === Estilos específicos para contenedores de autenticación === */
+.signup-container, 
+.login-container, 
+.password-reset-container,
+.verify-recovery-container {
+    width: 100%;
+    height: 100dvh;
+    height: 100vh; /* fallback para navegadores que no soportan dvh */
+    margin: 0;
+    padding: 0;
+}
+
+/* === Forzar contenedores de auth a ocupar todo el ancho === */
+.container.signup-container,
+.container.login-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Container en páginas específicas - reglas más específicas */
+body .container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Forzar que todos los contenedores de auth ocupen el 100% del ancho */
+main.container,
+div.container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* === Asegurar que body y html no tengan márgenes === */
+html, body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+/* === Forzar que no haya espacio en blanco lateral === */
+* {
+    box-sizing: border-box;
+}
+
+/* Asegurar que todos los elementos de auth ocupen el 100% del ancho */
+.signup, .login, .password-reset, .verify-recovery,
+.signup__grid, .login__grid, .password-reset__grid {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* === Forzar que el contenido ocupe toda la pantalla === */
+.signup, .login, .password-reset, .verify-recovery {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    min-height: 100vh; /* fallback para navegadores que no soportan dvh */
+    margin: 0;
+    padding: 0;
+}
+
+.signup__grid, .login__grid, .password-reset__grid {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    min-height: 100vh; /* fallback para navegadores que no soportan dvh */
+    margin: 0;
+    padding: 0;
+}
+
+/* === Media queries para móviles - forzar altura completa === */
+@media (max-width: 768px) {
+    .signup-container, 
+    .login-container, 
+    .password-reset-container,
+    .verify-recovery-container,
+    .signup, 
+    .login, 
+    .password-reset, 
+    .verify-recovery {
+        height: 100dvh !important;
+        height: 100vh !important; /* fallback */
+        min-height: 100dvh !important;
+        min-height: 100vh !important; /* fallback */
+    }
+    
+    .signup__grid, 
+    .login__grid, 
+    .password-reset__grid {
+        height: 100dvh !important;
+        height: 100vh !important; /* fallback */
+        min-height: 100dvh !important;
+        min-height: 100vh !important; /* fallback */
+    }
+}
