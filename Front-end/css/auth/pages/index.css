@@ -1,30 +1,20 @@
-/* ===== Pantalla Crear Cuenta — Responsive y alineada al prototipo ===== */
+/* ===== PANTALLA CREAR CUENTA ===== */
 
-/* Contenedor específico para signup - los estilos principales están en auth-styles.css */
+/* Contenedor específico para signup */
 .signup-container {
   display: flex;
 }
 
-
-/* Pantalla completa sin estilo de tarjeta */
+/* Pantalla completa */
 .signup {
   background: #fff;
-  width: 100%;      /* ocupa todo el ancho */
-  height: 100dvh;   /* ocupa toda la altura */
-  height: 100vh;    /* fallback */
-  margin: 0;
   overflow: hidden;
 }
 
-/* Grid dos columnas con proporción suave; altura completa */
+/* Grid dos columnas */
 .signup__grid {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  height: 100dvh;   /* ocupa toda la pantalla */
-  height: 100vh;    /* fallback */
-  width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 
@@ -109,145 +99,20 @@
 .link:hover{ text-decoration:underline; }
 .formwrap__footer{ text-align:center; color:#6b7280; margin-top: 12px; }
 
-/* ===== Breakpoints ===== */
-/* Tablet "media" (todo cómodo, sin apretar) */
-@media (max-width: 1024px){
-  .signup__grid { grid-template-columns: 1fr 1fr; height: 100vh; }
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .signup__grid { grid-template-columns: 1fr 1fr; }
   .formwrap { max-width: 560px; }
 }
 
-/* Móvil: columnas apiladas y paddings más compactos */
-@media (max-width: 768px){
-  .container { height: 100dvh; height: 100vh; }
-  .signup { height: 100dvh; height: 100vh; }
-  .signup__grid { grid-template-columns: 1fr; height: 100dvh; height: 100vh; }
-  .signup__left { order:2; padding: 20px; border-right:0; border-top:1px solid #e7e7e7; }
-  .signup__right{ order:1; padding: 20px; }
-  .form--cols   { grid-template-columns: 1fr; }
-}
-
-/* Desktop grande: un poco más de aire y tipografía */
-@media (min-width: 1280px){
-  .signup__card { width: min(1240px, 92vw); }
-  .brand__title{ font-size: 38px; }
-}
-
-/* ===== Modal de Verificación ===== */
-.verification-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.verification-modal .modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-}
-
-.verification-modal h3 {
-  color: #1f2937;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.verification-modal p {
-  color: #6b7280;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-}
-
-.verification-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.verification-form input {
-  padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 1rem;
-  text-align: center;
-  letter-spacing: 0.1em;
-  transition: border-color 0.2s;
-}
-
-.verification-form input:focus {
-  outline: none;
-  border-color: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-}
-
-.verification-form .btn-primary {
-  background: #22c55e;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.verification-form .btn-primary:hover {
-  background: #16a34a;
-}
-
-.verification-form .btn-primary:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-}
-
-.verification-form .btn-secondary {
-  background: transparent;
-  color: #6b7280;
-  border: 2px solid #e5e7eb;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.verification-form .btn-secondary:hover {
-  border-color: #22c55e;
-  color: #22c55e;
-}
-
-.verification-form .btn-secondary:disabled {
-  background: #f3f4f6;
-  color: #9ca3af;
-  cursor: not-allowed;
-}
-
-.verification-modal .error-message {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-  min-height: 1.25rem;
-}
-
-/* Responsive para el modal */
 @media (max-width: 768px) {
-  .verification-modal .modal-content {
-    padding: 1.5rem;
-    margin: 1rem;
-  }
-  
-  .verification-modal h3 {
-    font-size: 1.25rem;
-  }
+  .signup__grid { grid-template-columns: 1fr; }
+  .signup__left { order: 2; padding: 20px; border-right: 0; border-top: 1px solid #e7e7e7; }
+  .signup__right { order: 1; padding: 20px; }
+  .form--cols { grid-template-columns: 1fr; }
 }
+
+@media (min-width: 1280px) {
+  .brand__title { font-size: 38px; }
+}
+

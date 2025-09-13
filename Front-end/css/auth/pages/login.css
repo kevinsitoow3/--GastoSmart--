@@ -1,29 +1,20 @@
-/* ===== Pantalla Iniciar Sesión — Responsive y alineada al prototipo ===== */
+/* ===== PANTALLA INICIAR SESIÓN ===== */
 
-/* Contenedor específico para login - los estilos principales están en auth-styles.css */
+/* Contenedor específico para login */
 .login-container {
   display: flex;
 }
 
-/* Pantalla completa sin estilo de tarjeta */
+/* Pantalla completa */
 .login {
   background: #fff;
-  width: 100%;      /* ocupa todo el ancho */
-  height: 100dvh;   /* ocupa toda la altura */
-  height: 100vh;    /* fallback */
-  margin: 0;
   overflow: hidden;
 }
 
-/* Grid dos columnas con proporción suave; altura completa */
+/* Grid dos columnas */
 .login__grid {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  height: 100dvh;   /* ocupa toda la pantalla */
-  height: 100vh;    /* fallback */
-  width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 /* ===== Panel izquierdo (branding + bullets) ===== */
@@ -281,43 +272,16 @@
   }
 }
 
-/* ===== Breakpoints ===== */
-/* Tablet "media" (todo cómodo, sin apretar) */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
-  .login__grid { 
-    grid-template-columns: 1fr 1fr; 
-    height: 100vh; 
-  }
-  .formwrap { 
-    max-width: 560px; 
-  }
+  .login__grid { grid-template-columns: 1fr 1fr; }
+  .formwrap { max-width: 560px; }
 }
 
-/* Móvil: columnas apiladas y paddings más compactos */
 @media (max-width: 768px) {
-  .container { 
-    height: 100dvh; 
-    height: 100vh; 
-  }
-  .login { 
-    height: 100dvh; 
-    height: 100vh; 
-  }
-  .login__grid { 
-    grid-template-columns: 1fr; 
-    height: 100dvh; 
-    height: 100vh; 
-  }
-  .login__left { 
-    order: 2; 
-    padding: 20px; 
-    border-right: 0; 
-    border-top: 1px solid #e7e7e7; 
-  }
-  .login__right { 
-    order: 1; 
-    padding: 20px; 
-  }
+  .login__grid { grid-template-columns: 1fr; }
+  .login__left { order: 2; padding: 20px; border-right: 0; border-top: 1px solid #e7e7e7; }
+  .login__right { order: 1; padding: 20px; }
   
   .modal__content {
     width: 95%;
@@ -331,15 +295,9 @@
   }
 }
 
-/* Desktop grande: un poco más de aire y tipografía */
 @media (min-width: 1280px) {
-  .brand__title { 
-    font-size: 38px; 
-  }
-  
-  .formwrap {
-    max-width: 640px;
-  }
+  .brand__title { font-size: 38px; }
+  .formwrap { max-width: 640px; }
 }
 
 /* ===== Mejoras de accesibilidad ===== */

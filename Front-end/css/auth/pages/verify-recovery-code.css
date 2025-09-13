@@ -1,10 +1,7 @@
-/* === Verify Recovery Code Page Styles === */
+/* ===== PANTALLA VERIFICAR CÓDIGO ===== */
 
 .verify-code-container {
     display: flex;
-    min-height: 100dvh;
-    min-height: 100vh; /* fallback */
-    width: 100%;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
