@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI):
 # Crear aplicación FastAPI
 app = FastAPI(
     title="GastoSmart API",
-    description="API para el sistema de gestión de gastos GastoSmart",
+    description="API para el sistema de gestión de gastos GastoSmart - Colombia",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -125,10 +125,40 @@ async def read_frontend(path: str):
     # Si no existe, devolver el index
     return FileResponse("../Front-end/html/index.html")
 
+# Importar routers
+from routers.users import router as users_router
+
+# Incluir routers en la aplicación
+app.include_router(users_router)
+
 # Ruta de prueba
 @app.get("/api/test")
 async def test_api():
     return {"message": "¡GastoSmart API funcionando!", "status": "success"}
+
+# Ruta para obtener configuración regional
+@app.get("/api/config/regional")
+async def get_regional_config():
+    """
+    Obtener configuración regional de Colombia
+    """
+    from config.regional import (
+        CURRENCY, CURRENCY_SYMBOL, CURRENCY_NAME, TIMEZONE, 
+        COUNTRY, DATE_FORMAT, NUMBER_FORMAT, EXPENSE_CATEGORIES
+    )
+    
+    return {
+        "country": COUNTRY,
+        "currency": {
+            "code": CURRENCY,
+            "symbol": CURRENCY_SYMBOL,
+            "name": CURRENCY_NAME
+        },
+        "timezone": TIMEZONE,
+        "date_format": DATE_FORMAT,
+        "number_format": NUMBER_FORMAT,
+        "expense_categories": EXPENSE_CATEGORIES
+    }
 
 if __name__ == "__main__":
     import uvicorn

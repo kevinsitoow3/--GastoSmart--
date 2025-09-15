@@ -86,9 +86,6 @@
 .checkbox{ display:inline-flex; align-items:center; gap:.55rem; color:#6b7280; }
 .checkbox input{ width:16px; height:16px; }
 
-/* Errores */
-.form__errors{ min-height:20px; color:#b91c1c; font-size:.95rem; margin:0; }
-
 /* Botón personalizado para esta página */
 .btn-primary{
   width:100%;
@@ -116,3 +113,79 @@
   .brand__title { font-size: 38px; }
 }
 
+
+/* ---- ESTILOS PARA LOS ERRORES Y EXITOS ---- */
+.form__errors {
+  margin-top: 1rem;
+  padding: 0;
+  display: none;
+  min-height: 20px;
+  font-size: 0.95rem;
+}
+
+.form__errors .error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form__errors .error::before {
+  content: "⚠️";
+  font-size: 1rem;
+}
+
+.form__errors .success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #059669;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form__errors .success::before {
+  content: "✅";
+  font-size: 1rem;
+}
+
+/* Animación para los mensajes */
+.form__errors .error,
+.form__errors .success {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo para el botón cuando está deshabilitado */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #9ca3af;
+}
+
+.btn:disabled:hover {
+  background-color: #9ca3af;
+  transform: none;
+}
