@@ -1,7 +1,10 @@
-from motor.motor_asyncio import AsyncIOMotorClient
-from pymongo import MongoClient
-import os
-from dotenv import load_dotenv
+from motor.motor_asyncio import AsyncIOMotorClient #Cliente asíncrono para FastAPI
+from pymongo import MongoClient #Cliente síncrono para operaciones que lo requieran
+import os #Para obtener las variables de entorno
+from dotenv import load_dotenv #Para cargar las variables de entorno
+
+#SINCRONICO: una cosa a la vez
+#ASINCRONICO: varias cosas a la vez
 
 # Cargar variables de entorno
 load_dotenv()

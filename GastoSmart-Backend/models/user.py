@@ -5,6 +5,13 @@ Este archivo define el modelo de datos para los usuarios de la aplicación,
 incluyendo información personal y configuración de presupuesto inicial.
 """
 
+#Pydantic: para validar los datos
+#EmailStr: para validar el correo electrónico
+#Field: para definir los campos del modelo
+#Optional: para definir los campos opcionales
+#datetime: para definir la fecha y hora
+#Enum: para definir los valores posibles
+
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
@@ -45,7 +52,7 @@ class User(BaseModel):
     class Config:
         """Configuración del modelo"""
         json_encoders = {
-            datetime: lambda v: v.isoformat()
+            datetime: lambda v: v.isoformat() #Para convertir la fecha y hora a JSON, formato ISO
         }
         json_schema_extra = {
             "example": {

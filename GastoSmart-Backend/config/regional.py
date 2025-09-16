@@ -51,7 +51,7 @@ def parse_currency(currency_string: str) -> float:
     cleaned = currency_string.replace("$", "").replace(" ", "").replace(".", "")
     return float(cleaned)
 
-# Categorías de gastos comunes en Colombia
+# Categorías de gastos comunes
 EXPENSE_CATEGORIES = [
     "Alimentación",
     "Transporte",
