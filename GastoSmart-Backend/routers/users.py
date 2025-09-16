@@ -16,7 +16,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 # Crear router para usuarios
 router = APIRouter(prefix="/api/users", tags=["usuarios"])
 
-# Configurar autenticación (por ahora básica, después implementaremos JWT)
+# Configurar autenticación 
 security = HTTPBearer()
 
 def get_user_operations(db: AsyncIOMotorDatabase = Depends(get_async_database)) -> UserOperations:

@@ -28,7 +28,7 @@ app = FastAPI(
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción, especificar dominios específicos
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -109,22 +109,6 @@ async def read_settings():
         content = f.read()
     return HTMLResponse(content=content)
 
-@app.get("/{path:path}")
-async def read_frontend(path: str):
-    # Verificar si es un archivo HTML
-    if path.endswith('.html'):
-        file_path = f"../Front-end/html/{path}"
-        if os.path.exists(file_path):
-            return FileResponse(file_path)
-    
-    # Si no es HTML, intentar servir como archivo estático
-    static_path = f"../Front-end/{path}"
-    if os.path.exists(static_path):
-        return FileResponse(static_path)
-    
-    # Si no existe, devolver el index
-    return FileResponse("../Front-end/html/index.html")
-
 # Importar routers
 from routers.users import router as users_router
 
@@ -159,6 +143,23 @@ async def get_regional_config():
         "number_format": NUMBER_FORMAT,
         "expense_categories": EXPENSE_CATEGORIES
     }
+
+# Ruta catch-all para servir archivos del frontend (DEBE ir al final)
+@app.get("/{path:path}")
+async def read_frontend(path: str):
+    # Verificar si es un archivo HTML
+    if path.endswith('.html'):
+        file_path = f"../Front-end/html/{path}"
+        if os.path.exists(file_path):
+            return FileResponse(file_path)
+    
+    # Si no es HTML, intentar servir como archivo estático
+    static_path = f"../Front-end/{path}"
+    if os.path.exists(static_path):
+        return FileResponse(static_path)
+    
+    # Si no existe, devolver el index
+    return FileResponse("../Front-end/html/index.html")
 
 if __name__ == "__main__":
     import uvicorn
