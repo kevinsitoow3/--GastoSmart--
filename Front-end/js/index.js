@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData(signupForm);
         const userData = {
-            nombre: formData.get('firstName'),
-            apellido: formData.get('lastName'),
-            correo_electronico: formData.get('email'),
-            contraseña: formData.get('password'),
-            presupuesto_inicial: 1000000,  // Valor temporal válido
-            periodo_presupuesto: 'mensual'
+            first_name: formData.get('firstName'),
+            last_name: formData.get('lastName'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+            initial_budget: 1000000,
+            budget_period: 'mensual'
         }
 
         const validation = validateForm(userData, formData.get('confirm'));
@@ -87,28 +87,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const errors = [];
 
         // Validar nombre
-        if(!userData.nombre || userData.nombre.length < 2){
+        if(!userData.first_name || userData.first_name.length < 2){
             errors.push('El nombre debe tener al menos 2 caracteres');
         }
 
         // Validar apellido
-        if(!userData.apellido || userData.apellido.length < 2){
+        if(!userData.last_name || userData.last_name.length < 2){
             errors.push('El apellido debe tener al menos 2 caracteres');
         }
 
         // Validar correo electrónico
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!userData.correo_electronico || !emailRegex.test(userData.correo_electronico)){
+        if(!userData.email || !emailRegex.test(userData.email)){
             errors.push('El correo electrónico no es válido');
         }
 
         // Validar contraseña
-        if(!userData.contraseña || userData.contraseña.length < 8){
+        if(!userData.password || userData.password.length < 8){
             errors.push('La contraseña debe tener al menos 8 caracteres');
         }
 
         // Validar confirmación de contraseña
-        if(userData.contraseña !== confirmPassword){
+        if(userData.password !== confirmPassword){
             errors.push('Las contraseñas no coinciden');
         }
 

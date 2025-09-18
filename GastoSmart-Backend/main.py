@@ -3,10 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
+from dotenv import load_dotenv
 from contextlib import asynccontextmanager
-
+import uvicorn
 # Importar conexión a MongoDB
 from database.connection import connect_to_mongo, close_mongo_connection
+
+# Cargar variables de entorno
+load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -162,6 +166,6 @@ async def read_frontend(path: str):
     return FileResponse("../Front-end/html/index.html")
 
 if __name__ == "__main__":
-    import uvicorn
+    
     # Usar localhost para desarrollo local
     uvicorn.run(app, host="127.0.0.1", port=8000)

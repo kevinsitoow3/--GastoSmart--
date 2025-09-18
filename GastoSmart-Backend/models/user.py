@@ -5,12 +5,12 @@ Este archivo define el modelo de datos para los usuarios de la aplicación,
 incluyendo información personal y configuración de presupuesto inicial.
 """
 
-#Pydantic: para validar los datos
-#EmailStr: para validar el correo electrónico
-#Field: para definir los campos del modelo
-#Optional: para definir los campos opcionales
-#datetime: para definir la fecha y hora
-#Enum: para definir los valores posibles
+# Pydantic: para validar los datos
+# EmailStr: para validar el correo electrónico
+# Field: para definir los campos del modelo
+# Optional: para definir los campos opcionales
+# datetime: para definir la fecha y hora
+# Enum: para definir los valores posibles
 
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
@@ -31,39 +31,39 @@ class User(BaseModel):
     """
     
     # Información personal básica
-    nombre: str = Field(..., min_length=2, max_length=50, description="Nombre del usuario")
-    apellido: str = Field(..., min_length=2, max_length=50, description="Apellido del usuario")
-    correo_electronico: EmailStr = Field(..., description="Correo electrónico único del usuario")
-    contraseña: str = Field(..., min_length=8, description="Contraseña encriptada del usuario")
+    first_name: str = Field(..., min_length=2, max_length=50, description="Nombre del usuario")
+    last_name: str = Field(..., min_length=2, max_length=50, description="Apellido del usuario")
+    email: EmailStr = Field(..., description="Correo electrónico único del usuario")
+    password: str = Field(..., min_length=8, description="Contraseña encriptada del usuario")
     
     # Configuración de presupuesto inicial
-    presupuesto_inicial: float = Field(..., gt=0, description="Monto del presupuesto inicial")
-    periodo_presupuesto: BudgetPeriod = Field(..., description="Período del presupuesto (quincenal/mensual")
+    initial_budget: float = Field(..., gt=0, description="Monto del presupuesto inicial")
+    budget_period: BudgetPeriod = Field(..., description="Período del presupuesto (quincenal/mensual)")
     
     # Metadatos del usuario
-    fecha_registro: datetime = Field(default_factory=datetime.now, description="Fecha de registro del usuario")
-    activo: bool = Field(default=True, description="Estado activo del usuario")
-    ultimo_acceso: Optional[datetime] = Field(default=None, description="Última vez que el usuario accedió")
+    registration_date: datetime = Field(default_factory=datetime.now, description="Fecha de registro del usuario")
+    is_active: bool = Field(default=True, description="Estado activo del usuario")
+    last_access: Optional[datetime] = Field(default=None, description="Última vez que el usuario accedió")
     
     # Configuración adicional
-    moneda: str = Field(default="COP", description="Moneda preferida del usuario")
-    zona_horaria: str = Field(default="America/Bogota", description="Zona horaria del usuario")
+    currency: str = Field(default="COP", description="Moneda preferida del usuario")
+    timezone: str = Field(default="America/Bogota", description="Zona horaria del usuario")
     
     class Config:
         """Configuración del modelo"""
         json_encoders = {
-            datetime: lambda v: v.isoformat() #Para convertir la fecha y hora a JSON, formato ISO
+            datetime: lambda v: v.isoformat()  # Para convertir la fecha y hora a JSON, formato ISO
         }
         json_schema_extra = {
             "example": {
-                "nombre": "Juan",
-                "apellido": "Pérez",
-                "correo_electronico": "juan.perez@ejemplo.com",
-                "contraseña": "mi_contraseña_segura_123",
-                "presupuesto_inicial": 2000000.00,
-                "periodo_presupuesto": "mensual",
-                "moneda": "COP",
-                "zona_horaria": "America/Bogota"
+                "first_name": "Juan",
+                "last_name": "Pérez",
+                "email": "juan.perez@ejemplo.com",
+                "password": "mi_contraseña_segura_123",
+                "initial_budget": 2000000.00,
+                "budget_period": "mensual",
+                "currency": "COP",
+                "timezone": "America/Bogota"
             }
         }
 
@@ -73,14 +73,14 @@ class UserCreate(BaseModel):
     
     Se usa en el endpoint de registro, sin incluir metadatos automáticos.
     """
-    nombre: str = Field(..., min_length=2, max_length=50)
-    apellido: str = Field(..., min_length=2, max_length=50)
-    correo_electronico: EmailStr
-    contraseña: str = Field(..., min_length=8)
-    presupuesto_inicial: float = Field(..., gt=0)
-    periodo_presupuesto: BudgetPeriod
-    moneda: str = Field(default="COP")
-    zona_horaria: str = Field(default="America/Bogota")
+    first_name: str = Field(..., min_length=2, max_length=50)
+    last_name: str = Field(..., min_length=2, max_length=50)
+    email: EmailStr
+    password: str = Field(..., min_length=8)
+    initial_budget: float = Field(..., gt=0)
+    budget_period: BudgetPeriod
+    currency: str = Field(default="COP")
+    timezone: str = Field(default="America/Bogota")
 
 class UserResponse(BaseModel):
     """
@@ -89,27 +89,42 @@ class UserResponse(BaseModel):
     Se usa para devolver información del usuario sin exponer la contraseña.
     """
     id: str = Field(..., description="ID único del usuario")
-    nombre: str
-    apellido: str
-    correo_electronico: EmailStr
-    presupuesto_inicial: float
-    periodo_presupuesto: BudgetPeriod
-    fecha_registro: datetime
-    activo: bool
-    ultimo_acceso: Optional[datetime]
-    moneda: str
-    zona_horaria: str
+    first_name: str
+    last_name: str
+    email: EmailStr
+    initial_budget: float
+    budget_period: BudgetPeriod
+    registration_date: datetime
+    is_active: bool
+    last_access: Optional[datetime]
+    currency: str
+    timezone: str
 
 class UserLogin(BaseModel):
     """
     Modelo para login de usuario
     """
-    correo_electronico: EmailStr
-    contraseña: str
+    email: EmailStr
+    password: str
+
+class VerificationCodeRequest(BaseModel):
+    
+    # Modelo para solicitar código de verificación
+    
+    email: EmailStr  # Campo obligatorio de tipo email
+    purpose: str = Field(..., description="Propósito: 'registration' o 'password_recovery'")  # Campo obligatorio con descripción
+
+class VerificationCodeConfirm(BaseModel):
+    
+    # Modelo para confirmar código de verificación
+    
+    email: EmailStr  # Campo obligatorio de tipo email
+    code: str = Field(..., min_length=6, max_length=6, description="Código de 6 dígitos")  # Campo obligatorio con validación de longitud
+    purpose: str = Field(..., description="Propósito: 'registration' o 'password_recovery'")  # Campo obligatorio con descripción
 
 class BudgetUpdate(BaseModel):
-    """
-    Modelo para actualizar presupuesto del usuario
-    """
-    presupuesto_inicial: float = Field(..., gt=0)
-    periodo_presupuesto: BudgetPeriod
+    
+    # Modelo para actualizar presupuesto del usuario
+    
+    initial_budget: float = Field(..., gt=0)
+    budget_period: BudgetPeriod

@@ -10,7 +10,7 @@ from fastapi.security import HTTPBearer
 from typing import List
 from database.connection import get_async_database
 from database.user_operations import UserOperations
-from models.user import UserCreate, UserResponse, UserLogin, BudgetUpdate
+from models.user import UserCreate, UserResponse, UserLogin, BudgetUpdate, VerificationCodeRequest, VerificationCodeConfirm
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 # Crear router para usuarios
@@ -226,3 +226,78 @@ async def get_user_by_email(
         )
     
     return user
+
+@router.post("/send-verification-code")
+async def send_verification_code(
+    request: VerificationCodeRequest,
+    user_ops: UserOperations = Depends(get_user_operations)):
+    """
+    Enviar código de verificación por correo
+    
+    Envía un código único de 6 dígitos al correo del usuario para
+    verificación en registro o recuperación de contraseña.
+    """
+    try:
+        # Para registro, verificar que el correo no esté registrado
+        if request.purpose == "registration":
+            existing_user = await user_ops.get_user_by_email(request.email)
+            if existing_user:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="El correo electrónico ya está registrado"
+                )
+        
+        # Enviar código de verificación
+        success = await user_ops.send_verification_code(
+            request.email, 
+            request.purpose
+        )
+        
+        if success:
+            return {"message": "Código de verificación enviado exitosamente"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Error al enviar el código de verificación"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno del servidor"
+        )
+
+@router.post("/verify-code")
+async def verify_code(
+    request: VerificationCodeConfirm,
+    user_ops: UserOperations = Depends(get_user_operations)):
+    """
+    Verificar código de verificación
+    
+    Valida el código enviado por correo para completar el proceso
+    de registro o recuperación de contraseña.
+    """
+    try:
+        is_valid = await user_ops.verify_code(
+            request.email,
+            request.code,
+            request.purpose
+        )
+        
+        if is_valid:
+            return {"message": "Código verificado exitosamente", "valid": True}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Código inválido o expirado"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno del servidor"
+        )

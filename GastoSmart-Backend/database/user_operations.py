@@ -10,7 +10,7 @@ from bson import ObjectId
 from typing import Optional, List
 from datetime import datetime
 import bcrypt
-from models.user import User, UserCreate, UserResponse, UserLogin, BudgetUpdate
+from models.user import User, UserCreate, UserResponse, UserLogin, BudgetUpdate, VerificationCodeRequest, VerificationCodeConfirm
 
 class UserOperations:
     """
@@ -42,28 +42,28 @@ class UserOperations:
         """
         # Verificar si el correo ya existe
         existing_user = await self.collection.find_one({
-            "correo_electronico": user_data.correo_electronico
+            "email": user_data.email
         })
         
         if existing_user:
             raise ValueError("El correo electrónico ya está registrado")
         
         # Encriptar contraseña
-        hashed_password = self._hash_password(user_data.contraseña)
+        hashed_password = self._hash_password(user_data.password)
         
         # Crear documento de usuario
         user_doc = {
-            "nombre": user_data.nombre,
-            "apellido": user_data.apellido,
-            "correo_electronico": user_data.correo_electronico,
-            "contraseña": hashed_password,
-            "presupuesto_inicial": user_data.presupuesto_inicial,
-            "periodo_presupuesto": user_data.periodo_presupuesto,
-            "fecha_registro": datetime.now(),
-            "activo": True,
-            "ultimo_acceso": None,
-            "moneda": user_data.moneda,
-            "zona_horaria": user_data.zona_horaria
+            "first_name": user_data.first_name,
+            "last_name": user_data.last_name,
+            "email": user_data.email,
+            "password": hashed_password,
+            "initial_budget": user_data.initial_budget,
+            "budget_period": user_data.budget_period,
+            "registration_date": datetime.now(),
+            "is_active": True,
+            "last_access": None,
+            "currency": user_data.currency,
+            "timezone": user_data.timezone
         }
         
         # Insertar en la base de datos
@@ -85,8 +85,8 @@ class UserOperations:
             UserResponse o None si no se encuentra
         """
         user_doc = await self.collection.find_one({
-            "correo_electronico": email,
-            "activo": True
+            "email": email,
+            "is_active": True
         })
         
         if user_doc:
@@ -106,7 +106,7 @@ class UserOperations:
         try:
             user_doc = await self.collection.find_one({
                 "_id": ObjectId(user_id),
-                "activo": True
+                "is_active": True
             })
             
             if user_doc:
@@ -127,15 +127,15 @@ class UserOperations:
         """
         # Buscar usuario por correo
         user_doc = await self.collection.find_one({
-            "correo_electronico": login_data.correo_electronico,
-            "activo": True
+            "email": login_data.email,
+            "is_active": True
         })
         
-        if user_doc and self._verify_password(login_data.contraseña, user_doc["contraseña"]):
+        if user_doc and self._verify_password(login_data.password, user_doc["password"]):
             # Actualizar último acceso
             await self.collection.update_one(
                 {"_id": user_doc["_id"]},
-                {"$set": {"ultimo_acceso": datetime.now()}}
+                {"$set": {"last_access": datetime.now()}}
             )
             
             return self._user_doc_to_response(user_doc)
@@ -155,11 +155,11 @@ class UserOperations:
         """
         try:
             result = await self.collection.update_one(
-                {"_id": ObjectId(user_id), "activo": True},
+                {"_id": ObjectId(user_id), "is_active": True},
                 {
                     "$set": {
-                        "presupuesto_inicial": budget_data.presupuesto_inicial,
-                        "periodo_presupuesto": budget_data.periodo_presupuesto
+                        "initial_budget": budget_data.initial_budget,
+                        "budget_period": budget_data.budget_period
                     }
                 }
             )
@@ -183,7 +183,7 @@ class UserOperations:
         try:
             result = await self.collection.update_one(
                 {"_id": ObjectId(user_id)},
-                {"$set": {"activo": False}}
+                {"$set": {"is_active": False}}
             )
             return result.modified_count > 0
         except Exception:
@@ -200,13 +200,52 @@ class UserOperations:
         Returns:
             Lista de usuarios
         """
-        cursor = self.collection.find({"activo": True}).skip(skip).limit(limit)
+        cursor = self.collection.find({"is_active": True}).skip(skip).limit(limit)
         users = []
         
         async for user_doc in cursor:
             users.append(self._user_doc_to_response(user_doc))
         
         return users
+    
+    async def send_verification_code(self, email: str, purpose: str, user_name: str = None) -> bool:
+        """
+        Enviar código de verificación por correo
+        
+        Args:
+            email: Correo electrónico del usuario
+            purpose: Propósito del código ('registration' o 'password_recovery')
+            user_name: Nombre del usuario (opcional)
+            
+        Returns:
+            bool: True si se envió correctamente
+        """
+        try:
+            from services.email_service import EmailService
+            email_service = EmailService(self.database)
+            code = await email_service.generate_verification_code(email, purpose)
+            return await email_service.send_verification_email(email, code, purpose, user_name)
+        except Exception:
+            return False
+    
+    async def verify_code(self, email: str, code: str, purpose: str) -> bool:
+        """
+        Verificar código de verificación
+        
+        Args:
+            email: Correo electrónico del usuario
+            code: Código de verificación
+            purpose: Propósito del código
+            
+        Returns:
+            bool: True si el código es válido
+        """
+        try:
+            from services.email_service import EmailService
+            email_service = EmailService(self.database)
+            return await email_service.verify_code(email, code, purpose)
+        except Exception:
+            return False
     
     def _hash_password(self, password: str) -> str:
         """
@@ -247,14 +286,14 @@ class UserOperations:
         """
         return UserResponse(
             id=str(user_doc["_id"]),
-            nombre=user_doc["nombre"],
-            apellido=user_doc["apellido"],
-            correo_electronico=user_doc["correo_electronico"],
-            presupuesto_inicial=user_doc["presupuesto_inicial"],
-            periodo_presupuesto=user_doc["periodo_presupuesto"],
-            fecha_registro=user_doc["fecha_registro"],
-            activo=user_doc["activo"],
-            ultimo_acceso=user_doc.get("ultimo_acceso"),
-            moneda=user_doc.get("moneda", "COP"),
-            zona_horaria=user_doc.get("zona_horaria", "America/Bogota")
+            first_name=user_doc["first_name"],
+            last_name=user_doc["last_name"],
+            email=user_doc["email"],
+            initial_budget=user_doc["initial_budget"],
+            budget_period=user_doc["budget_period"],
+            registration_date=user_doc["registration_date"],
+            is_active=user_doc["is_active"],
+            last_access=user_doc.get("last_access"),
+            currency=user_doc.get("currency", "COP"),
+            timezone=user_doc.get("timezone", "America/Bogota")
         )
