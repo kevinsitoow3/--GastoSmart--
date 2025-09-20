@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if(formMessages){
             console.log('Creando mensaje de error...');
-            formMessages.innerHTML = `<div class="error">${message}</div>`;
+            formMessages.innerHTML = `<div class="error-message">${message}</div>`;
             formMessages.style.display = 'block';
             formMessages.style.visibility = 'visible';
             formMessages.style.opacity = '1';
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 formMessages.style.display = 'none';
                 formMessages.innerHTML = '';
                 console.log('Mensaje ocultado');
-            }, 5300); // 5.3 segundos para que coincida con la animación
+            }, 5000); // 5 segundos para que coincida con la animación
         } else {
             console.error('ERROR: formMessages no encontrado!');
         }
@@ -236,14 +236,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showSuccess(message){
         if(formMessages){
-            formMessages.innerHTML = `<div class="success">${message}</div>`;
+            formMessages.innerHTML = `<div class="success-message">${message}</div>`;
             formMessages.style.display = 'block';
             
             // Ocultar el mensaje después de 5 segundos
             setTimeout(() => {
                 formMessages.style.display = 'none';
                 formMessages.innerHTML = '';
-            }, 5300);
+            }, 5000);
         }
     }
 
