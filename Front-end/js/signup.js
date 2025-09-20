@@ -145,6 +145,11 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = 'Crear cuenta';
         }
     }
+
+
+
+  
+    //-----FUNCION PARA MOSTRAR Y OCULTAR LAS CONTRASEÑAS-----
     //-----FUNCION PARA MOSTRAR EL ESTADO DE CARGANDO-----
     // TODO: Implementar funcionalidades de la página de inicio
     // - Configurar animaciones de entrada
