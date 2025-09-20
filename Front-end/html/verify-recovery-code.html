@@ -146,14 +146,14 @@
                         <h2 class="formwrap__title">VERIFICAR CÓDIGO</h2>
                         <p class="formwrap__subtitle">
                             Ingresa el código de 6 dígitos que enviamos a tu correo electrónico:
-                            <span id="userEmailDisplay" class="email-display"></span>
+                            <span id="emailDisplay" class="email-display"></span>
                         </p>
                         
                         <!-- Mensajes de estado -->
-                        <div id="verifyCodeMessages" class="form__messages" style="display: none;"></div>
+                        <div id="formMessages" class="form__messages" style="display: none;"></div>
                 
                         
-                        <form id="verifyCodeForm" class="form">
+                        <form id="verifyForm" class="form">
                             <div class="form__row">
                                 <label class="label">
                                     Código de verificación:
@@ -181,9 +181,9 @@
                     
                     <!-- Botón de verificación -->
                     <div class="form__row">
-                                 <button type="submit" id="verifyCodeBtn" class="btn btn--primary btn--full">
-                                     <span id="verifyCodeBtnText">Verificar Código</span>
-                                     <div id="verifyCodeSpinner" class="btn__spinner" style="display: none;"></div>
+                                 <button type="submit" id="submitBtn" class="btn btn--primary btn--full">
+                                     <span id="submitBtnText">Verificar Código</span>
+                                     <div id="submitBtnSpinner" class="spinner" style="display: none;"></div>
                                  </button>
                              </div>
                     

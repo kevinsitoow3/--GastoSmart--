@@ -1,29 +1,118 @@
-/**
- * Funcionalidad de la Página de Login
- * 
- * Este archivo maneja toda la lógica específica de la página de inicio de sesión.
- * Incluye validación de formularios, manejo de credenciales y comunicación
- * con el backend para autenticar usuarios.
- * 
- * Funcionalidades:
- * - Validación de campos de email y contraseña
- * - Envío de credenciales al backend
- * - Manejo de errores de autenticación
- * - Redirección después del login exitoso
- * - Recordar usuario (opcional)
- */
-
-// Inicializar cuando el DOM esté completamente cargado
+// Manejo del formulario de login
 document.addEventListener('DOMContentLoaded', function() {
-    // Confirmar que la página de login se ha inicializado
-    console.log('Página de login inicializada correctamente');
+    const loginForm = document.getElementById('login-form');
     
-    // TODO: Implementar funcionalidades específicas de login
-    // - Validación de formulario de login
-    // - Envío de credenciales al endpoint de autenticación
-    // - Manejo de respuestas del servidor (éxito/error)
-    // - Almacenamiento de token de sesión
-    // - Redirección al dashboard tras login exitoso
-    // - Mostrar mensajes de error apropiados
-    // - Funcionalidad de "Recordar usuario"
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevenir envío normal del formulario
+            
+            // Obtener datos del formulario
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Validar campos
+            if (!email || !password) {
+                showError('Por favor, completa todos los campos');
+                return;
+            }
+            
+            try {
+                // Mostrar indicador de carga
+                showLoading(true);
+                
+                // Realizar petición de login
+                const response = await fetch('http://127.0.0.1:8000/api/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                if (response.ok) {
+                    const user = await response.json();
+                    
+                    // Guardar datos del usuario en localStorage
+                    localStorage.setItem('user', JSON.stringify(user));
+                    
+                    // Mostrar mensaje de éxito
+                    showSuccess('¡Login exitoso! Redirigiendo...');
+                    
+                    // Redirigir a presupuesto inicial después de 1.5 segundos
+                    setTimeout(() => {
+                        window.location.href = '/initial-budget';
+                    }, 1500);
+                    
+                } else {
+                    const error = await response.json();
+                    showError(error.detail || 'Credenciales inválidas');
+                }
+                
+            } catch (error) {
+                console.error('Error en login:', error);
+                showError('Error de conexión. Intenta de nuevo.');
+            } finally {
+                showLoading(false);
+            }
+        });
+    }
 });
+
+// Función para mostrar errores
+function showError(message) {
+    const errorDiv = document.getElementById('error-message');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        
+        // Ocultar error después de 5 segundos
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+}
+
+// Función para mostrar mensajes de éxito
+function showSuccess(message) {
+    const successDiv = document.getElementById('success-message');
+    if (successDiv) {
+        successDiv.textContent = message;
+        successDiv.style.display = 'block';
+        
+        // Ocultar mensaje después de 3 segundos
+        setTimeout(() => {
+            successDiv.style.display = 'none';
+        }, 3000);
+    }
+}
+
+// Función para mostrar/ocultar indicador de carga
+function showLoading(show) {
+    const submitBtn = document.querySelector('#login-form button[type="submit"]');
+    if (submitBtn) {
+        if (show) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Iniciando sesión...';
+        } else {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Iniciar Sesión';
+        }
+    }
+}
+
+// Función para mostrar/ocultar contraseña en login
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const eyeIcon = document.getElementById(fieldId + '-eye');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        eyeIcon.classList.add('eye-open');
+    } else {
+        passwordField.type = 'password';
+        eyeIcon.classList.remove('eye-open');
+    }
+}

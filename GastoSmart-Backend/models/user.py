@@ -19,8 +19,8 @@ from enum import Enum
 
 class BudgetPeriod(str, Enum):
     """Períodos de presupuesto disponibles"""
-    QUINCENAL = "quincenal"  # Cada 15 días
-    MENSUAL = "mensual"      # Cada mes
+    BYWEEKLY = "quincenal"  # Cada 15 días
+    MONTHLY = "mensual"      # Cada mes
 
 class User(BaseModel):
     """
