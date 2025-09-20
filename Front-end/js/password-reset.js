@@ -236,14 +236,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showSuccess(message){
         if(formMessages){
-            formMessages.innerHTML = `<div class="success-message">${message}</div>`;
+            formMessages.innerHTML = `<div class="success-message-animated">${message}</div>`;
             formMessages.style.display = 'block';
             
-            // Ocultar el mensaje después de 5 segundos
+            // Ocultar el mensaje después de 3 segundos
             setTimeout(() => {
                 formMessages.style.display = 'none';
                 formMessages.innerHTML = '';
-            }, 5000);
+            }, 3000);
         }
     }
 

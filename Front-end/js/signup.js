@@ -14,21 +14,50 @@
  */
 const API_BASE_URL = 'http://127.0.0.1:8000/api';
 // Inicializar cuando el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
-    // Confirmar que la página de inicio se ha cargado correctamente
-    console.log('Página de inicio cargada exitosamente');
 
+
+document.addEventListener('DOMContentLoaded', function() {
     const signupBtn = document.getElementById('signupBtn');
     const submitBtn = document.getElementById('submitBtn'); 
     const formErrors = document.getElementById('formErrors');
     const signupForm = document.getElementById('signupForm');
+    let isSubmitting = false; // Bandera para evitar múltiples submits
 
     if(signupForm) {
+        // Agregar múltiples protecciones contra submit
         signupForm.addEventListener('submit', handleSignup);
+        
+        // Protección adicional: prevenir CUALQUIER submit del form
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return false;
+        });
+        
+        // También proteger el botón específicamente
+        if(submitBtn) {
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Ejecutar directamente la función de signup
+                handleSignup(e);
+                
+                return false;
+            });
+        }
     }
 
     async function handleSignup(event) {
         event.preventDefault();
+        event.stopPropagation();
+
+        // Evitar múltiples submits
+        if(isSubmitting) {
+            return;
+        }
+        isSubmitting = true;
 
         // Limpiar errores previos
         clearErrors();
@@ -47,8 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const validation = validateForm(userData, formData.get('confirm'), termsAccepted);
         if(!validation.isValid){
             showFieldErrors(validation.errors);
+            isSubmitting = false; // Resetear bandera
             return;
         }
+        
 
         setLoadingState(true);
 
@@ -64,13 +95,66 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if(response.ok){
-                console.log('Usuario registrado', data);
-                showSuccess('¡Usuario registrado exitosamente! Redirigiendo....');
-                setTimeout(() => {
-                    window.location.href = '/login';
-            }, 2000);
+                // Enviar código de verificación después del registro exitoso
+                try {
+                    const verificationResponse = await fetch(`${API_BASE_URL}/users/send-verification-code`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: userData.email,
+                            purpose: 'registration'
+                        })
+                    });
+                    
+                    if (verificationResponse.ok) {
+                        // Guardar email para la página de verificación
+                        localStorage.setItem('registrationEmail', userData.email);
+                        localStorage.setItem('registrationUserData', JSON.stringify(userData));
+                        
+                        showSuccess('¡Cuenta creada! Revisa tu email y verifica tu código para activar tu cuenta.');
+                        
+                        // Redirección después de 2 segundos
+                        setTimeout(() => {
+                            try {
+                                const targetUrl = '/verify-registration-code';
+                                
+                                // Intentar redirección
+                                window.location.replace(targetUrl);
+                                
+                                // Verificar después de un momento si aún estamos aquí
+                                setTimeout(() => {
+                                    if (window.location.pathname === '/signup') {
+                                        // Método alternativo
+                                        window.location.href = '/verify-registration-code';
+                                    }
+                                }, 1000);
+                                
+                            } catch (error) {
+                                // Error silencioso - redirección fallida
+                            }
+                        }, 2000);
+                    } else {
+                        const verificationError = await verificationResponse.json();
+                        // Aún así debe ir a verificación - la cuenta fue creada
+                        localStorage.setItem('registrationEmail', userData.email);
+                        localStorage.setItem('registrationUserData', JSON.stringify(userData));
+                        showSuccess('¡Cuenta creada! Debes verificar tu email para activar tu cuenta. Redirigiendo...');
+                        setTimeout(() => {
+                            window.location.replace('/verify-registration-code');
+                        }, 500);
+                    }
+                } catch (verificationError) {
+                    // Aún así debe ir a verificación - la cuenta fue creada
+                    localStorage.setItem('registrationEmail', userData.email);
+                    localStorage.setItem('registrationUserData', JSON.stringify(userData));
+                    showSuccess('¡Cuenta creada! Debes verificar tu email para activar tu cuenta. Redirigiendo...');
+                    setTimeout(() => {
+                        window.location.replace('/verify-registration-code');
+                    }, 500);
+                }
             }else{
-                console.error('Error en el registro', data);
                 // Manejar errores de validación de Pydantic
                 if (data.detail && Array.isArray(data.detail)) {
                     const errorMessages = data.detail.map(error => error.msg || error.message || 'Error de validación');
@@ -80,10 +164,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }catch(error){
-            console.error('Error de conexión', error);
             showErrors(['Error de conexión. Verifica que el servidor esté ejecutándose']);
         }finally{
             setLoadingState(false);
+            isSubmitting = false; // Resetear bandera
         }
     }
 
@@ -118,8 +202,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Validar contraseña
         if(!userData.password || userData.password.trim() === ''){
             errors.push({field: 'password', message: 'La contraseña es obligatoria'});
-        } else if(userData.password.length < 8){
-            errors.push({field: 'password', message: 'La contraseña debe tener al menos 8 caracteres'});
+        } else {
+            const passwordErrors = validatePasswordStrength(userData.password);
+            if(passwordErrors.length > 0){
+                errors.push({field: 'password', message: passwordErrors[0]});
+            }
         }
 
         // Validar confirmación de contraseña
@@ -138,6 +225,38 @@ document.addEventListener('DOMContentLoaded', function() {
             isValid: errors.length === 0,
             errors:errors
         };
+    }
+
+    //-----FUNCION PARA VALIDAR FORTALEZA DE CONTRASEÑA-----
+    function validatePasswordStrength(password) {
+        const errors = [];
+        
+        // Mínimo 8 caracteres
+        if(password.length < 8) {
+            errors.push('La contraseña debe tener al menos 8 caracteres');
+        }
+        
+        // Al menos una mayúscula
+        if(!/(?=.*[A-Z])/.test(password)) {
+            errors.push('La contraseña debe contener al menos una mayúscula');
+        }
+        
+        // Al menos una minúscula
+        if(!/(?=.*[a-z])/.test(password)) {
+            errors.push('La contraseña debe contener al menos una minúscula');
+        }
+        
+        // Al menos un número
+        if(!/(?=.*\d)/.test(password)) {
+            errors.push('La contraseña debe contener al menos un número');
+        }
+        
+        // Al menos un carácter especial
+        if(!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(password)) {
+            errors.push('La contraseña debe contener al menos un carácter especial (!@#$%^&*,etc.)');
+        }
+        
+        return errors;
     }
 
     //-----FUNCION PARA LIMPIAR ERRORES PREVIOS-----
@@ -159,24 +278,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const field = document.querySelector(`[name="${error.field}"]`);
             if(field){
                 // Crear contenedor de error si no existe
-                let errorContainer = field.closest('.form__row').querySelector('.error-message');
+                const formRow = field.closest('.form__row');
+                let errorContainer = formRow.querySelector('.error-message');
                 if(!errorContainer){
                     errorContainer = document.createElement('div');
                     errorContainer.className = 'error-message';
                     
                     // Para el checkbox de términos, insertar después del label
                     if(error.field === 'terms'){
-                        const termsContainer = field.closest('.form__row');
-                        termsContainer.appendChild(errorContainer);
+                        formRow.appendChild(errorContainer);
                     } else {
-                        // Para otros campos, insertar después del campo
-                        const fieldContainer = field.closest('.field') || field.closest('span');
-                        fieldContainer.parentNode.insertBefore(errorContainer, fieldContainer.nextSibling);
+                        // Para otros campos, insertar después de la label
+                        const label = formRow.querySelector('.label');
+                        if(label){
+                            label.appendChild(errorContainer);
+                        } else {
+                            formRow.appendChild(errorContainer);
+                        }
                     }
                 }
                 
                 errorContainer.textContent = error.message;
                 errorContainer.style.display = 'block';
+                errorContainer.style.opacity = '1';
+                errorContainer.style.transform = 'translateY(0)';
+                errorContainer.style.animation = 'none'; // Deshabilitar animación para mostrar inmediatamente
                 
                 // Auto-remover después de 5 segundos
                 setTimeout(() => {
@@ -209,8 +335,14 @@ document.addEventListener('DOMContentLoaded', function() {
     //-----FUNCION PARA MOSTRAR MENSAJES DE EXITO-----
     function showSuccess(message){
         if(formErrors){
-            formErrors.innerHTML = `<div class="success">${message}</div>`;
+            formErrors.innerHTML = `<div class="success-message-animated">${message}</div>`;
             formErrors.style.display = 'block';
+            
+            // Auto-ocultar después de 3 segundos (antes de la redirección)
+            setTimeout(() => {
+                formErrors.style.display = 'none';
+                formErrors.innerHTML = '';
+            }, 3000);
         }
     }
 
@@ -225,9 +357,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
-
-  
     //-----FUNCION PARA MOSTRAR Y OCULTAR LAS CONTRASEÑAS-----
     //-----FUNCION PARA MOSTRAR EL ESTADO DE CARGANDO-----
     // TODO: Implementar funcionalidades de la página de inicio

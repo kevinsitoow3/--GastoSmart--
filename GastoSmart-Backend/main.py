@@ -49,6 +49,13 @@ async def read_index():
         content = f.read()
     return HTMLResponse(content=content)
 
+@app.get("/signup")
+async def read_signup():
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/signup.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
+
 # Rutas específicas para cada página HTML
 @app.get("/login")
 async def read_login():
@@ -75,6 +82,13 @@ async def read_password_reset():
 async def read_verify_recovery_code():
     from fastapi.responses import HTMLResponse
     with open("../Front-end/html/verify-recovery-code.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
+
+@app.get("/verify-registration-code")
+async def read_verify_registration_code():
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/verify-registration-code.html", "r", encoding="utf-8") as f:
         content = f.read()
     return HTMLResponse(content=content)
 

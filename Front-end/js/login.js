@@ -64,9 +64,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Mostrar mensaje de éxito
                     showLoginSuccess('¡Login exitoso! Redirigiendo...');
                     
-                    // Redirigir a presupuesto inicial después de 1.5 segundos
+                    // Redirigir según el estado del usuario después de 1.5 segundos
                     setTimeout(() => {
-                        window.location.href = '/initial-budget';
+                        if (user.initial_budget && user.budget_period) {
+                            // Si ya tiene presupuesto configurado, ir al dashboard
+                            window.location.href = '/dashboard';
+                        } else {
+                            // Si no tiene presupuesto, ir a configurarlo
+                            window.location.href = '/initial-budget';
+                        }
                     }, 1500);
                     
                 } else {
@@ -111,8 +117,13 @@ function showLoginError(message) {
 function showLoginSuccess(message) {
     const loginMessages = document.getElementById('loginMessages');
     if (loginMessages) {
-        loginMessages.innerHTML = `<div class="success-message">${message}</div>`;
+        loginMessages.innerHTML = `<div class="success-message-animated">${message}</div>`;
         loginMessages.style.display = 'block';
+        
+        // Auto-ocultar después de 2 segundos (antes de la redirección)
+        setTimeout(() => {
+            clearLoginMessages();
+        }, 2000);
     }
 }
 

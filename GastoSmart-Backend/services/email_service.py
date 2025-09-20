@@ -150,21 +150,65 @@ class EmailService:
         """
         return html_body
     
-    async def verify_code(self, email:str, code:str, purpose:str) -> bool:
+    async def verify_code(self, email:str, code:str, purpose:str) -> dict:
+        """
+        Verificar código de verificación con control de intentos
         
+        Returns:
+            dict: {"valid": bool, "message": str, "attempts_left": int}
+        """
+        
+        # Buscar el código más reciente para este email y propósito
         verification_doc = await self.verification_codes.find_one({
-            "email":email,
-            "code":code,
-            "purpose":purpose,
-            "used":False,
+            "email": email,
+            "purpose": purpose,
+            "used": False,
             "expires_at": {"$gt": datetime.now()},
-        })
+        }, sort=[("created_at", -1)])
         
-        if verification_doc:
-            #Marcar el codigo como usado
+        if not verification_doc:
+            return {
+                "valid": False, 
+                "message": "Código inválido o expirado",
+                "attempts_left": 0
+            }
+        
+        # Verificar si el código coincide
+        if verification_doc["code"] == code:
+            # Código correcto - marcar como usado
             await self.verification_codes.update_one(
                 {"_id": verification_doc["_id"]},
-                {"$set": {"used":True}},
+                {"$set": {"used": True}},
             )
-            return True
-        return False
+            return {
+                "valid": True,
+                "message": "Código verificado exitosamente",
+                "attempts_left": 3
+            }
+        else:
+            # Código incorrecto - incrementar intentos
+            current_attempts = verification_doc.get("attempts", 0) + 1
+            attempts_left = max(0, 3 - current_attempts)
+            
+            if current_attempts >= 3:
+                # Máximo de intentos alcanzado - marcar como usado
+                await self.verification_codes.update_one(
+                    {"_id": verification_doc["_id"]},
+                    {"$set": {"used": True, "attempts": current_attempts}},
+                )
+                return {
+                    "valid": False,
+                    "message": "Máximo de intentos alcanzado. Solicita un nuevo código",
+                    "attempts_left": 0
+                }
+            else:
+                # Actualizar contador de intentos
+                await self.verification_codes.update_one(
+                    {"_id": verification_doc["_id"]},
+                    {"$set": {"attempts": current_attempts}},
+                )
+                return {
+                    "valid": False,
+                    "message": f"Código incorrecto. Te quedan {attempts_left} intentos",
+                    "attempts_left": attempts_left
+                }
