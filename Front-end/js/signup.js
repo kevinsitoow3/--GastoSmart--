@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const signupBtn = document.getElementById('signupBtn');
     const submitBtn = document.getElementById('submitBtn'); 
     const formErrors = document.getElementById('formErrors');
+    const signupForm = document.getElementById('signupForm');
 
     if(signupForm) {
         signupForm.addEventListener('submit', handleSignup);

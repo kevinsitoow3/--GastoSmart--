@@ -45,7 +45,7 @@ app.mount("/static", StaticFiles(directory="../Front-end"), name="static")
 @app.get("/")
 async def read_index():
     from fastapi.responses import HTMLResponse
-    with open("../Front-end/html/index.html", "r", encoding="utf-8") as f:
+    with open("../Front-end/html/signup.html", "r", encoding="utf-8") as f:
         content = f.read()
     return HTMLResponse(content=content)
 
@@ -163,7 +163,7 @@ async def read_frontend(path: str):
         return FileResponse(static_path)
     
     # Si no existe, devolver el index
-    return FileResponse("../Front-end/html/index.html")
+    return FileResponse("../Front-end/html/signup.html")
 
 if __name__ == "__main__":
     

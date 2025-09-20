@@ -20,7 +20,7 @@
 
 /* === Páginas === */
 @import url("../pages/login.css");
-@import url("../pages/index.css"); /* signup.css */
+@import url("../pages/signup.css"); /* signup.css */
 @import url("../pages/password-reset.css");
 @import url("../pages/verify-recovery-code.css");
 @import url("../pages/initial-budget.css");
