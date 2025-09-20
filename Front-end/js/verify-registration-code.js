@@ -1,20 +1,20 @@
 /**
- * Funcionalidad de Verificación de Código de Recuperación
+ * Funcionalidad de Verificación de Código de Registro
  * 
  * Este archivo maneja la verificación del código de 6 dígitos
- * enviado por email para completar el proceso de recuperación de contraseña.
+ * enviado por email para completar el proceso de registro y activación de cuenta.
  * 
  * Funcionalidades:
- * - Verificación del código de 6 dígitos
+ * - Verificación del código de 6 dígitos para registro
  * - Validación de formato del código
  * - Manejo de respuestas del servidor
- * - Redirección al login después de verificación exitosa
+ * - Activación de cuenta y redirección a initial-budget
  */
 
 // Inicializar cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
     // Confirmar que la página de verificación se ha inicializado
-    console.log('Página de verificación de código inicializada');
+    console.log('Página de verificación de registro inicializada');
     
     const API_URL = 'http://127.0.0.1:8000/api';
     const verifyForm = document.getElementById('verifyForm'); // Obtener formulario
@@ -23,18 +23,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const formMessages = document.getElementById('formMessages'); // Obtener mensajes de estado
     const emailDisplay = document.getElementById('emailDisplay'); // Obtener elemento para mostrar email
 
-    // Verificar si hay email guardado del paso anterior
-    const resetEmail = localStorage.getItem('resetEmail');
-    if (!resetEmail) {
-        // Si no hay email, redirigir a recuperación de contraseña
-        console.log('No hay email guardado, redirigiendo a password-reset');
-        window.location.href = '/password-reset';
+    // Verificar si hay email guardado del registro
+    const registrationEmail = localStorage.getItem('registrationEmail');
+    if (!registrationEmail) {
+        // Si no hay email, redirigir a signup
+        console.log('No hay email guardado, redirigiendo a signup');
+        window.location.href = '/signup';
         return;
     }
 
     // Mostrar el email al usuario
     if (emailDisplay) {
-        emailDisplay.textContent = resetEmail;
+        emailDisplay.textContent = registrationEmail;
     }
     
     // Función para el contador de tiempo
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (resendBtn) {
             resendBtn.addEventListener('click', async () => {
-                const email = localStorage.getItem('resetEmail');
+                const email = localStorage.getItem('registrationEmail');
                 
                 if (!email) {
                     showError("No hay email guardado");
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         body: JSON.stringify({
                             email: email,
-                            purpose: 'password_recovery'
+                            purpose: 'registration'
                         }),
                     });
                     
@@ -150,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
     startTimer();
     setupResendCode();
 
-
     // Auto-focus en el campo de código
     if (codeInput) {
         codeInput.focus();
@@ -191,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        setLoadingState(true); // Cambia el estado del botón a "verificando..."
+        setLoadingState(true); // Cambia el estado del botón a "activando..."
 
         try {
             // Realizar petición para verificar código
@@ -201,21 +200,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email: resetEmail,
+                    email: registrationEmail,
                     code: code,
-                    purpose: 'password_recovery'
+                    purpose: 'registration'
                 }),
             });
 
             const data = await response.json(); // Convertir la respuesta a JSON
 
             if (response.ok) { // Si la respuesta es exitosa
-                showSuccess("¡Código verificado exitosamente! Redirigiendo al login...");
+                showSuccess("¡Cuenta activada exitosamente! Ya puedes iniciar sesión. Redirigiendo...");
 
-                // Limpiar email del localStorage
-                localStorage.removeItem('resetEmail');
+                // Limpiar datos de registro del localStorage
+                localStorage.removeItem('registrationEmail');
+                localStorage.removeItem('registrationUserData');
 
-                // Redirigir al login después de 2 segundos
+                // Redirigir al login después de 2 segundos (según CA-01)
                 setTimeout(() => {
                     window.location.href = '/login';
                 }, 2000);
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             showError("Error de conexión con el servidor. Verifica que el servidor esté funcionando correctamente");
         } finally {
-            setLoadingState(false); // Quita el estado de "verificando..."
+            setLoadingState(false); // Quita el estado de "activando..."
         }
     }
 
@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showError(message) {
         if (formMessages) {
             formMessages.innerHTML = `<div class="error">${message}</div>`;
+            formMessages.className = 'form__messages error';
             formMessages.style.display = 'block';
             
             // Ocultar error después de 5 segundos
@@ -258,6 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showSuccess(message) {
         if (formMessages) {
             formMessages.innerHTML = `<div class="success">${message}</div>`;
+            formMessages.className = 'form__messages success';
             formMessages.style.display = 'block';
             
             // Ocultar mensaje después de 3 segundos
@@ -271,10 +273,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function setLoadingState(loading) {
         if (loading) {
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Verificando...';
+            submitBtn.textContent = 'Activando cuenta...';
         } else {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Verificar Código';
+            submitBtn.textContent = 'Activar Cuenta';
         }
     }
 });

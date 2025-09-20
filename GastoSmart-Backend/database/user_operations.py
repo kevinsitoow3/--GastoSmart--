@@ -51,7 +51,7 @@ class UserOperations:
         # Encriptar contraseña
         hashed_password = self._hash_password(user_data.password)
         
-        # Crear documento de usuario
+        # Crear documento de usuario (INACTIVO hasta verificar email)
         user_doc = {
             "first_name": user_data.first_name,
             "last_name": user_data.last_name,
@@ -60,7 +60,8 @@ class UserOperations:
             "initial_budget": user_data.initial_budget,
             "budget_period": user_data.budget_period,
             "registration_date": datetime.now(),
-            "is_active": True,
+            "is_active": False,  # INACTIVO hasta verificar código
+            "email_verified": False,  # Campo para controlar verificación
             "last_access": None,
             "currency": user_data.currency,
             "timezone": user_data.timezone
@@ -228,7 +229,7 @@ class UserOperations:
         except Exception:
             return False
     
-    async def verify_code(self, email: str, code: str, purpose: str) -> bool:
+    async def verify_code(self, email: str, code: str, purpose: str) -> dict:
         """
         Verificar código de verificación
         
@@ -238,12 +239,48 @@ class UserOperations:
             purpose: Propósito del código
             
         Returns:
-            bool: True si el código es válido
+            dict: {"valid": bool, "message": str, "attempts_left": int}
         """
         try:
             from services.email_service import EmailService
             email_service = EmailService(self.database)
-            return await email_service.verify_code(email, code, purpose)
+            result = await email_service.verify_code(email, code, purpose)
+            
+            # Si la verificación es exitosa y es para registro, activar la cuenta
+            if result["valid"] and purpose == "registration":
+                await self.activate_user_account(email)
+                result["message"] = "Cuenta activada exitosamente"
+            
+            return result
+        except Exception:
+            return {
+                "valid": False,
+                "message": "Error interno del servidor",
+                "attempts_left": 0
+            }
+    
+    async def activate_user_account(self, email: str) -> bool:
+        """
+        Activar cuenta de usuario después de verificar email
+        
+        Args:
+            email: Correo electrónico del usuario
+            
+        Returns:
+            bool: True si se activó correctamente
+        """
+        try:
+            result = await self.collection.update_one(
+                {"email": email},
+                {
+                    "$set": {
+                        "is_active": True,
+                        "email_verified": True,
+                        "verification_date": datetime.now()
+                    }
+                }
+            )
+            return result.modified_count > 0
         except Exception:
             return False
     
@@ -293,6 +330,7 @@ class UserOperations:
             budget_period=user_doc["budget_period"],
             registration_date=user_doc["registration_date"],
             is_active=user_doc["is_active"],
+            email_verified=user_doc.get("email_verified", False),
             last_access=user_doc.get("last_access"),
             currency=user_doc.get("currency", "COP"),
             timezone=user_doc.get("timezone", "America/Bogota")

@@ -1,27 +1,49 @@
+// Configuración de la API
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
+
 // Manejo del formulario de login
 document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('login-form');
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginBtnText = document.getElementById('loginBtnText');
+    const loginSpinner = document.getElementById('loginSpinner');
+    const loginMessages = document.getElementById('loginMessages');
     
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault(); // Prevenir envío normal del formulario
             
-            // Obtener datos del formulario
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            // Limpiar mensajes previos
+            clearLoginMessages();
             
-            // Validar campos
-            if (!email || !password) {
-                showError('Por favor, completa todos los campos');
+            // Obtener datos del formulario
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            // Validar campos vacíos
+            if (!email) {
+                showLoginError('El correo electrónico es obligatorio');
+                return;
+            }
+            
+            if (!password) {
+                showLoginError('La contraseña es obligatoria');
+                return;
+            }
+            
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showLoginError('El formato del correo electrónico no es válido');
                 return;
             }
             
             try {
                 // Mostrar indicador de carga
-                showLoading(true);
+                setLoginLoading(true);
                 
                 // Realizar petición de login
-                const response = await fetch('http://127.0.0.1:8000/api/users/login', {
+                const response = await fetch(`${API_BASE_URL}/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -37,68 +59,89 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Guardar datos del usuario en localStorage
                     localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('token', user.token || ''); // Si el backend devuelve un token
                     
                     // Mostrar mensaje de éxito
-                    showSuccess('¡Login exitoso! Redirigiendo...');
+                    showLoginSuccess('¡Login exitoso! Redirigiendo...');
                     
-                    // Redirigir a presupuesto inicial después de 1.5 segundos
+                    // Redirigir según el estado del usuario después de 1.5 segundos
                     setTimeout(() => {
-                        window.location.href = '/initial-budget';
+                        if (user.initial_budget && user.budget_period) {
+                            // Si ya tiene presupuesto configurado, ir al dashboard
+                            window.location.href = '/dashboard';
+                        } else {
+                            // Si no tiene presupuesto, ir a configurarlo
+                            window.location.href = '/initial-budget';
+                        }
                     }, 1500);
                     
                 } else {
                     const error = await response.json();
-                    showError(error.detail || 'Credenciales inválidas');
+                    showLoginError(error.detail || 'Credenciales incorrectas. Verifica tu email y contraseña.');
                 }
                 
             } catch (error) {
                 console.error('Error en login:', error);
-                showError('Error de conexión. Intenta de nuevo.');
+                showLoginError('Error de conexión. Verifica que el servidor esté funcionando.');
             } finally {
-                showLoading(false);
+                setLoginLoading(false);
             }
         });
     }
 });
 
-// Función para mostrar errores
-function showError(message) {
-    const errorDiv = document.getElementById('error-message');
-    if (errorDiv) {
-        errorDiv.textContent = message;
-        errorDiv.style.display = 'block';
+// Función para limpiar mensajes previos
+function clearLoginMessages() {
+    const loginMessages = document.getElementById('loginMessages');
+    if (loginMessages) {
+        loginMessages.innerHTML = '';
+        loginMessages.style.display = 'none';
+    }
+}
+
+// Función para mostrar errores de login
+function showLoginError(message) {
+    const loginMessages = document.getElementById('loginMessages');
+    if (loginMessages) {
+        loginMessages.innerHTML = `<div class="error-message">${message}</div>`;
+        loginMessages.style.display = 'block';
         
-        // Ocultar error después de 5 segundos
+        // Auto-ocultar después de 5 segundos
         setTimeout(() => {
-            errorDiv.style.display = 'none';
+            clearLoginMessages();
         }, 5000);
     }
 }
 
-// Función para mostrar mensajes de éxito
-function showSuccess(message) {
-    const successDiv = document.getElementById('success-message');
-    if (successDiv) {
-        successDiv.textContent = message;
-        successDiv.style.display = 'block';
+// Función para mostrar mensajes de éxito de login
+function showLoginSuccess(message) {
+    const loginMessages = document.getElementById('loginMessages');
+    if (loginMessages) {
+        loginMessages.innerHTML = `<div class="success-message-animated">${message}</div>`;
+        loginMessages.style.display = 'block';
         
-        // Ocultar mensaje después de 3 segundos
+        // Auto-ocultar después de 2 segundos (antes de la redirección)
         setTimeout(() => {
-            successDiv.style.display = 'none';
-        }, 3000);
+            clearLoginMessages();
+        }, 2000);
     }
 }
 
 // Función para mostrar/ocultar indicador de carga
-function showLoading(show) {
-    const submitBtn = document.querySelector('#login-form button[type="submit"]');
-    if (submitBtn) {
-        if (show) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Iniciando sesión...';
+function setLoginLoading(loading) {
+    const loginBtn = document.getElementById('loginBtn');
+    const loginBtnText = document.getElementById('loginBtnText');
+    const loginSpinner = document.getElementById('loginSpinner');
+    
+    if (loginBtn && loginBtnText && loginSpinner) {
+        if (loading) {
+            loginBtn.disabled = true;
+            loginBtnText.style.display = 'none';
+            loginSpinner.style.display = 'block';
         } else {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Iniciar Sesión';
+            loginBtn.disabled = false;
+            loginBtnText.style.display = 'inline';
+            loginSpinner.style.display = 'none';
         }
     }
 }

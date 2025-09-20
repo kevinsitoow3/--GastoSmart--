@@ -96,6 +96,7 @@ class UserResponse(BaseModel):
     budget_period: BudgetPeriod
     registration_date: datetime
     is_active: bool
+    email_verified: Optional[bool] = Field(default=False, description="Si el email ha sido verificado")
     last_access: Optional[datetime]
     currency: str
     timezone: str

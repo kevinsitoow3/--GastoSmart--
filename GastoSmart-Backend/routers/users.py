@@ -238,13 +238,14 @@ async def send_verification_code(
     verificación en registro o recuperación de contraseña.
     """
     try:
-        # Para registro, verificar que el correo no esté registrado
+        # Para registro, verificar que el correo no esté ya verificado
         if request.purpose == "registration":
-            existing_user = await user_ops.get_user_by_email(request.email)
-            if existing_user:
+            # Buscar usuario incluyendo los inactivos
+            user_doc = await user_ops.collection.find_one({"email": request.email})
+            if user_doc and user_doc.get("email_verified", False):
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="El correo electrónico ya está registrado"
+                    detail="El correo electrónico ya está registrado y verificado"
                 )
         
         # Enviar código de verificación
@@ -280,18 +281,22 @@ async def verify_code(
     de registro o recuperación de contraseña.
     """
     try:
-        is_valid = await user_ops.verify_code(
+        result = await user_ops.verify_code(
             request.email,
             request.code,
             request.purpose
         )
         
-        if is_valid:
-            return {"message": "Código verificado exitosamente", "valid": True}
+        if result["valid"]:
+            return {
+                "message": result["message"], 
+                "valid": True,
+                "attempts_left": result["attempts_left"]
+            }
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Código inválido o expirado"
+                detail=result["message"]
             )
             
     except HTTPException:
