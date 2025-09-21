@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>GastoSmart — Ingresos y Gastos</title>
+    
+    <!-- Meta tags para SEO y accesibilidad -->
+    <meta name="description" content="Gestiona tus ingresos y gastos de manera eficiente con GastoSmart. Utiliza algoritmos avanzados de ordenamiento para organizar tus transacciones financieras." />
+    <meta name="keywords" content="gestión financiera, ingresos, gastos, presupuesto, ahorro, finanzas personales" />
+    <meta name="author" content="Kevin Correa - GastoSmart" />
+    
+    <!-- Estilos del dashboard -->
+    <link rel="stylesheet" href="/static/css/dashboard/main/dashboard-main.css?v=DEV">
+    <link rel="stylesheet" href="/static/css/dashboard/pages/income-expenses.css?v=DEV">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
+    
+    <!-- Recursos críticos se cargarán con los scripts -->
+</head>
+<body>
+    <!-- Indicador de algoritmo activo -->
+    <div class="algorithm-indicator" id="algorithm-indicator" style="display: none;">
+        Algoritmo Merge-Sort Activo
+    </div>
+
+    <div class="dashboard-layout">
+        <!-- Barra lateral izquierda -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand__logo">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                            <path d="M21 7h-1V6a2 2 0 0 0-2-2H5a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-4-1a1 1 0 0 1 1 1v1H5a2 2 0 0 1-2-2v-.171A1.83 1.83 0 0 1 4.829 4Zm5 8h-3V9h3Zm-5.5-2.5a1 1 0 1 1-1-1 1 1 0 0 1 1 1Z"/>
+                        </svg>
+                    </div>
+                    <span class="brand__title">GastoSmart</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav" role="navigation" aria-label="Navegación principal">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <svg class="nav-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                            </svg>
+                            <span>Panel Principal</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a href="/income-expenses" class="nav-link nav-link--active" aria-current="page">
+                            <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                            </svg>
+                            <span>Ingresos/Gastos</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <button class="nav-link" onclick="navigateToSection('metas')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span>Metas</span>
+                        </button>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <button class="nav-link" onclick="navigateToSection('reportes')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                            <span>Reportes</span>
+                        </button>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <button class="nav-link" onclick="navigateToSection('ajustes')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                            </svg>
+                            <span>Ajustes</span>
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Separador -->
+                <div class="nav-separator"></div>
+                
+                <!-- Cerrar sesión -->
+                <div class="nav-footer">
+                    <button class="nav-link nav-link--logout" onclick="logout()">
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                        <span>Cerrar sesión</span>
+                    </button>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Contenido principal -->
+        <main class="main-content">
+      <!-- Encabezado superior -->
+      <header class="main-header">
+        <div class="header-content">
+          <h1 class="page-title">Gestión de ingresos y gastos</h1>
+          <div class="header-right">
+            <button class="notification-btn" aria-label="Notificaciones">
+              <svg class="notification-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+              </svg>
+              <span class="notification-badge">1</span>
+            </button>
+            <div class="user-dropdown">
+              <button class="user-profile-btn" onclick="toggleUserDropdown()">
+                <div class="user-avatar">
+                  <span>NR</span>
+                </div>
+                <div class="user-info">
+                  <span class="user-name">Nicola Rich</span>
+                </div>
+                <svg class="dropdown-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+            
+            <!-- Área de contenido principal -->
+            <div class="dashboard-content">
+                <div class="content-container">
+                    <!-- Balance mensual actual -->
+                    <div class="balance-card">
+                        <h3 class="balance-title">Balance mensual Actual</h3>
+                        <div style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; z-index: 1000;">
+                            ✅ income-expenses.html
+                        </div>
+                        <div class="balance-amount">COL $1.450.000</div>
+                        <div class="balance-trend positive">↗ +3.3%</div>
+                        <div class="balance-actions">
+                            <button class="action-btn recommendations" id="recommendations-btn">
+                                Recomendaciones
+                                <span class="notification-dot"></span>
+                            </button>
+                            <button class="action-btn alerts" id="alerts-btn">
+                                ⚠ Alertas
+                                <span class="notification-dot"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sección de ingresos y gastos -->
+                    <div class="income-expense-section">
+                        <!-- Ingresos -->
+                        <div class="income-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Ingreso mensual Actual</h3>
+                            </div>
+                            <div class="card-amount income-amount">COL $3.200.000</div>
+                            <div class="card-trend positive">↗ +5.4%</div>
+                            
+                            <div class="data-section">
+                                <h4 class="data-title">Datos registrados</h4>
+                                <div class="data-list">
+                                    <div class="data-item">
+                                        <div class="data-icon income-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="data-label">Salario</span>
+                                        <span class="data-amount">+$2.800.000</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <div class="data-icon income-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="data-label">Freelance</span>
+                                        <span class="data-amount">+$250.000</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <div class="data-icon income-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                                <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="data-label">Intereses</span>
+                                        <span class="data-amount">+$150.000</span>
+                                    </div>
+                                </div>
+                                <div class="total-section">
+                                    <span class="total-label">Total ingresos: $3.200.000</span>
+                                </div>
+                            </div>
+
+                            <div class="card-actions">
+                                <button class="btn btn-income" id="add-income-btn">
+                                    + Añadir Ingreso
+                                </button>
+                                <button class="btn btn-edit" id="edit-income-btn">
+                                    ✏ Editar
+                                </button>
+                                <button class="btn btn-delete" id="delete-income-btn">
+                                    🗑
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Gastos -->
+                        <div class="expense-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Gasto mensual Actual</h3>
+                            </div>
+                            <div class="card-amount expense-amount">COL $1.750.000</div>
+                            <div class="card-trend negative">↘ -2.1%</div>
+                            
+                            <div class="data-section">
+                                <h4 class="data-title">Datos registrados</h4>
+                                <div class="data-list">
+                                    <div class="data-item">
+                                        <div class="data-icon expense-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="data-label">Arriendo</span>
+                                        <span class="data-amount">-$800.000</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <div class="data-icon expense-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                                <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="data-label">Comida</span>
+                                        <span class="data-amount">-$450.000</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <div class="data-icon expense-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="data-label">Transporte</span>
+                                        <span class="data-amount">-$200.000</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <div class="data-icon expense-icon">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="data-label">Entretenimiento</span>
+                                        <span class="data-amount">-$300.000</span>
+                                    </div>
+                                </div>
+                                <div class="total-section">
+                                    <span class="total-label">Total gastos: $1.750.000</span>
+                                </div>
+                            </div>
+
+                            <div class="card-actions">
+                                <button class="btn btn-expense" id="add-expense-btn">
+                                    + Añadir Gasto
+                                </button>
+                                <button class="btn btn-edit" id="edit-expense-btn">
+                                    ✏ Editar
+                                </button>
+                                <button class="btn btn-delete" id="delete-expense-btn">
+                                    🗑
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/error-handler.js?v=DEV"></script>
+    <script src="/static/js/dashboard.js?v=DEV"></script>
+    <script src="/static/js/merge-sort-demo.js?v=DEV"></script>
+    <script src="/static/js/income-expenses.js?v=DEV"></script>
+    
+    <!-- Script de inicialización -->
+    <script>
+        // Inicializar cuando el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando página de Ingresos y Gastos...');
+            
+            // Confirmar que estamos en la página correcta
+            document.title = 'GastoSmart — Ingresos y Gastos (ACTIVA)';
+            console.log('📄 Página income-expenses.html cargada correctamente');
+            
+            // Inicializar el módulo de ingresos y gastos
+            if (typeof initializeIncomeExpenses === 'function') {
+                initializeIncomeExpenses().then(() => {
+                    console.log('✅ Módulo de ingresos y gastos inicializado correctamente');
+                    
+                    // Mostrar notificación de éxito
+                    if (window.errorHandler) {
+                        window.errorHandler.showSuccess('Módulo cargado exitosamente', 'Algoritmo merge-sort activo');
+                    }
+                    
+                    // Mostrar indicador de algoritmo
+                    const algorithmIndicator = document.getElementById('algorithm-indicator');
+                    if (algorithmIndicator) {
+                        algorithmIndicator.style.display = 'block';
+                        algorithmIndicator.textContent = '🧮 Algoritmo Merge-Sort Activo';
+                        
+                        // Ocultar después de 4 segundos
+                        setTimeout(() => {
+                            algorithmIndicator.style.display = 'none';
+                        }, 4000);
+                    }
+                }).catch(error => {
+                    console.error('❌ Error al inicializar módulo de ingresos y gastos:', error);
+                    
+                    // Mostrar error visual
+                    if (window.errorHandler) {
+                        window.errorHandler.showError('Error al cargar módulo', 'No se pudo inicializar ingresos y gastos');
+                    }
+                });
+            } else {
+                console.error('❌ Función initializeIncomeExpenses no encontrada');
+                
+                // Mostrar error visual
+                if (window.errorHandler) {
+                    window.errorHandler.showError('Función no disponible', 'initializeIncomeExpenses no encontrada');
+                }
+            }
+        });
+
+        // Función para actualizar el perfil del usuario en el header
+        function updateUserProfile(user) {
+            const userNameElement = document.getElementById('header-user-name');
+            const userAvatarElement = document.getElementById('header-user-avatar');
+            const budgetAmountElement = document.getElementById('header-budget');
+            
+            if (userNameElement && user.first_name) {
+                userNameElement.textContent = user.first_name;
+            }
+            
+            if (userAvatarElement && user.first_name) {
+                userAvatarElement.textContent = user.first_name.charAt(0).toUpperCase();
+            }
+            
+            if (budgetAmountElement && user.initial_budget) {
+                budgetAmountElement.textContent = `$ ${formatNumberWithThousands(user.initial_budget)}`;
+            }
+        }
+
+        // Función para formatear números con puntos de miles
+        function formatNumberWithThousands(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        // Función para cerrar sesión
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        }
+
+        // Función para toggle del dropdown de usuario
+        function toggleUserDropdown() {
+            console.log('Toggle user dropdown - funcionalidad en desarrollo');
+        }
+
+        // Función para navegar entre secciones
+        function navigateToSection(section) {
+            console.log(`Navegando a sección: ${section}`);
+            
+            // Mapear secciones a URLs
+            const sectionUrls = {
+                'panel-principal': '/dashboard',
+                'ingresos-gastos': '/income-expenses',
+                'metas': '/goals',
+                'reportes': '/reports',
+                'ajustes': '/settings'
+            };
+            
+            const url = sectionUrls[section];
+            if (url) {
+                window.location.href = url;
+            }
+        }
+    </script>
+
+</body>
+</html>

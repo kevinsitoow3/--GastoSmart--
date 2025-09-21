@@ -27,18 +27,19 @@
 
 /* === Páginas del dashboard === */
 @import url("../pages/dashboard.css");
-@import url("../pages/budget.css");
+@import url("../pages/income-expenses.css");
 @import url("../pages/goals.css");
 @import url("../pages/reports.css");
 @import url("../pages/settings.css");
 
 /* === Estilos específicos para el dashboard === */
-.dashboard-container {
+.dashboard-container,
+.dashboard-layout {
     width: 100%;
     height: 100vh;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow: auto; /* Cambiado de hidden a auto para permitir scroll */
 }
 
 /* Asegurar que el dashboard ocupe toda la pantalla */

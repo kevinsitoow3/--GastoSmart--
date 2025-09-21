@@ -148,32 +148,20 @@ function loadSection(section) {
             `;
             break;
         case 'ingresos-gastos':
-            contentContainer.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; height: 300px; background: white; border-radius: 8px; border: 2px dashed #e2e8f0;">
-                    <p style="color: #64748b; font-size: 1.1rem;">Ingresos/Gastos - Contenido futuro aquí</p>
-                </div>
-            `;
+            // Redirigir a la página dedicada de ingresos y gastos
+            window.location.href = '/income-expenses';
             break;
         case 'metas':
-            contentContainer.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; height: 300px; background: white; border-radius: 8px; border: 2px dashed #e2e8f0;">
-                    <p style="color: #64748b; font-size: 1.1rem;">Metas - Contenido futuro aquí</p>
-                </div>
-            `;
+            // Redirigir a la página dedicada de metas
+            window.location.href = '/goals';
             break;
         case 'reportes':
-            contentContainer.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; height: 300px; background: white; border-radius: 8px; border: 2px dashed #e2e8f0;">
-                    <p style="color: #64748b; font-size: 1.1rem;">Reportes - Contenido futuro aquí</p>
-                </div>
-            `;
+            // Redirigir a la página dedicada de reportes
+            window.location.href = '/reports';
             break;
         case 'ajustes':
-            contentContainer.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; height: 300px; background: white; border-radius: 8px; border: 2px dashed #e2e8f0;">
-                    <p style="color: #64748b; font-size: 1.1rem;">Ajustes - Contenido futuro aquí</p>
-                </div>
-            `;
+            // Redirigir a la página dedicada de ajustes
+            window.location.href = '/settings';
             break;
         default:
             contentContainer.innerHTML = `

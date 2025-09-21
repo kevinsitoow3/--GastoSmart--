@@ -99,12 +99,6 @@ async def read_dashboard():
         content = f.read()
     return HTMLResponse(content=content)
 
-@app.get("/budget")
-async def read_budget():
-    from fastapi.responses import HTMLResponse
-    with open("../Front-end/html/budget.html", "r", encoding="utf-8") as f:
-        content = f.read()
-    return HTMLResponse(content=content)
 
 @app.get("/goals")
 async def read_goals():
@@ -127,11 +121,20 @@ async def read_settings():
         content = f.read()
     return HTMLResponse(content=content)
 
+@app.get("/income-expenses")
+async def read_income_expenses():
+    from fastapi.responses import HTMLResponse
+    with open("../Front-end/html/income-expenses.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
+
 # Importar routers
 from routers.users import router as users_router
+from routers.transactions import router as transactions_router
 
 # Incluir routers en la aplicación
 app.include_router(users_router)
+app.include_router(transactions_router)
 
 # Ruta de prueba
 @app.get("/api/test")
