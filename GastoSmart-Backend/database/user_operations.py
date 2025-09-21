@@ -59,6 +59,7 @@ class UserOperations:
             "password": hashed_password,
             "initial_budget": user_data.initial_budget,
             "budget_period": user_data.budget_period,
+            "budget_configured": False,  # El usuario no ha configurado su presupuesto aún
             "registration_date": datetime.now(),
             "is_active": False,  # INACTIVO hasta verificar código
             "email_verified": False,  # Campo para controlar verificación
@@ -194,7 +195,8 @@ class UserOperations:
                 {
                     "$set": {
                         "initial_budget": budget_data.initial_budget,
-                        "budget_period": budget_data.budget_period
+                        "budget_period": budget_data.budget_period,
+                        "budget_configured": True  # Marcar que el usuario ha configurado su presupuesto
                     }
                 }
             )
@@ -398,6 +400,7 @@ class UserOperations:
             email=user_doc["email"],
             initial_budget=user_doc["initial_budget"],
             budget_period=user_doc["budget_period"],
+            budget_configured=user_doc.get("budget_configured", False),
             registration_date=user_doc["registration_date"],
             is_active=user_doc["is_active"],
             email_verified=user_doc.get("email_verified", False),

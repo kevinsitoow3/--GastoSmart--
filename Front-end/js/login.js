@@ -64,20 +64,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Guardar datos del usuario en localStorage
                     localStorage.setItem('user', JSON.stringify(user));
-                    localStorage.setItem('token', user.token || ''); // Si el backend devuelve un token
+                    localStorage.setItem('token', user.token || '');
                     
                     // Mostrar mensaje de éxito
                     showLoginSuccess('¡Login exitoso! Redirigiendo...');
                     
                     // Redirigir según el estado del usuario después de 1.5 segundos
                     setTimeout(() => {
-                        if (user.initial_budget && user.budget_period) {
-                            // Si ya tiene presupuesto configurado, ir al dashboard
-                            window.location.href = '/dashboard';
-                        } else {
-                            // Si no tiene presupuesto, ir a configurarlo
-                            window.location.href = '/initial-budget';
-                        }
+                        redirectUserAfterLogin(user);
                     }, 1500);
                     
                 } else {
@@ -163,5 +157,27 @@ function togglePassword(fieldId) {
     } else {
         passwordField.type = 'password';
         eyeIcon.classList.remove('eye-open');
+    }
+}
+
+// Función para redirigir al usuario después del login según su estado
+function redirectUserAfterLogin(user) {
+    console.log('[DEBUG] Redirecting user after login:', user);
+    
+    try {
+        // Usar la función global para verificar el estado del presupuesto
+        if (hasBudgetConfigured(user)) {
+            // Usuario ya tiene presupuesto configurado -> Dashboard
+            console.log('[DEBUG] Redirecting to dashboard');
+            window.location.href = '/dashboard';
+        } else {
+            // Usuario no tiene presupuesto configurado -> Initial Budget
+            console.log('[DEBUG] Redirecting to initial budget setup');
+            window.location.href = '/initial-budget';
+        }
+    } catch (error) {
+        console.error('[ERROR] Error in redirect logic:', error);
+        // Fallback: ir al dashboard por defecto
+        window.location.href = '/dashboard';
     }
 }

@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Confirmar que el dashboard se ha inicializado correctamente
     console.log('Dashboard principal inicializado exitosamente');
     
-    // Verificar autenticación del usuario
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    // Verificar autenticación y estado del usuario
+    const user = getCurrentUser();
     if (!user) {
         // Si no hay usuario logueado, redirigir al login
         window.location.href = '/login';
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Verificar si el usuario tiene presupuesto configurado
-    if (!user.initial_budget || !user.budget_period) {
+    if (!hasBudgetConfigured(user)) {
         // Si no tiene presupuesto configurado, redirigir a initial-budget
         window.location.href = '/initial-budget';
         return;

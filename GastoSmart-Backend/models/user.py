@@ -37,8 +37,9 @@ class User(BaseModel):
     password: str = Field(..., min_length=8, description="Contraseña encriptada del usuario")
     
     # Configuración de presupuesto inicial
-    initial_budget: float = Field(..., gt=0, description="Monto del presupuesto inicial")
+    initial_budget: float = Field(..., ge=0, description="Monto del presupuesto inicial (puede ser 0 temporalmente)")
     budget_period: BudgetPeriod = Field(..., description="Período del presupuesto (quincenal/mensual)")
+    budget_configured: bool = Field(default=False, description="Si el usuario ha configurado su presupuesto")
     
     # Metadatos del usuario
     registration_date: datetime = Field(default_factory=datetime.now, description="Fecha de registro del usuario")
@@ -77,7 +78,7 @@ class UserCreate(BaseModel):
     last_name: str = Field(..., min_length=2, max_length=50)
     email: EmailStr
     password: str = Field(..., min_length=8)
-    initial_budget: float = Field(..., gt=0)
+    initial_budget: float = Field(..., ge=0)  # Permitir 0 para presupuesto temporal
     budget_period: BudgetPeriod
     currency: str = Field(default="COP")
     timezone: str = Field(default="America/Bogota")
@@ -94,6 +95,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     initial_budget: float
     budget_period: BudgetPeriod
+    budget_configured: bool
     registration_date: datetime
     is_active: bool
     email_verified: Optional[bool] = Field(default=False, description="Si el email ha sido verificado")
@@ -127,5 +129,5 @@ class BudgetUpdate(BaseModel):
     
     # Modelo para actualizar presupuesto del usuario
     
-    initial_budget: float = Field(..., gt=0)
+    initial_budget: float = Field(..., gt=0)  # Debe ser mayor a 0 cuando se configura
     budget_period: BudgetPeriod
