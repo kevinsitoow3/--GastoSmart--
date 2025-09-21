@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificar Registro - GastoSmart</title>
     
-    <!-- Estilos de autenticación -->
-    <link rel="stylesheet" href="/static/css/auth/main/auth-main.css?v=DEV">
-    <link rel="stylesheet" href="/static/css/auth/pages/verify-registration-code.css?v=DEV">
+    <!-- Estilos consolidados de verify-registration-code -->
+    <link rel="stylesheet" href="/static/css/verify-registration-code.css?v=DEV">
 </head>
 <body class="verify-registration-page">
     <main class="container">
-        <section class="login">
-            <div class="login__grid">
+        <section class="verify-registration-code">
+            <div class="verify-registration-code__grid">
                 <!-- Panel izquierdo -->
-                <aside class="login__left">
+                <aside class="verify-registration-code__left">
                     <div class="brand">
                         <div class="brand__logo" aria-hidden="true">
                             <!-- Wallet icon -->
@@ -69,7 +68,7 @@
                 </aside>
                 
                 <!-- Panel derecho -->
-                <main class="login__right">
+                <main class="verify-registration-code__right">
                     <div class="formwrap">
                         <h2 class="formwrap__title">ACTIVAR CUENTA</h2>
                         <p class="formwrap__subtitle">
@@ -140,6 +139,7 @@
     </main>
     
     <!-- Scripts -->
+    <script src="/static/js/error-handler.js?v=DEV"></script>
     <script src="/static/js/verify-registration-code.js?v=DEV"></script>
 </body>
 </html>

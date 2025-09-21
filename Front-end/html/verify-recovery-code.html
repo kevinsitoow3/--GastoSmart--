@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificar Código - GastoSmart</title>
     
-    <!-- Estilos de autenticación -->
-    <link rel="stylesheet" href="/static/css/auth/main/auth-main.css?v=DEV">
-    <link rel="stylesheet" href="/static/css/auth/pages/verify-recovery-code.css?v=DEV">
+    <!-- Estilos consolidados de verify-recovery-code -->
+    <link rel="stylesheet" href="/static/css/verify-recovery-code.css?v=DEV">
 </head>
 <body class="verify-recovery-page">
     <main class="container">
-        <section class="login">
-            <div class="login__grid">
+        <section class="verify-recovery-code">
+            <div class="verify-recovery-code__grid">
                 <!-- Panel izquierdo -->
-                <aside class="login__left">
+                <aside class="verify-recovery-code__left">
                     <div class="brand">
                         <div class="brand__logo" aria-hidden="true">
                             <!-- Wallet icon -->
@@ -69,7 +68,7 @@
                 </aside>
                 
                 <!-- Panel derecho -->
-                <main class="login__right">
+                <main class="verify-recovery-code__right">
                     <div class="formwrap">
                         <h2 class="formwrap__title">VERIFICAR CÓDIGO</h2>
                         <p class="formwrap__subtitle">
@@ -139,6 +138,7 @@
     </div>
     
     <!-- Scripts -->
+    <script src="/static/js/error-handler.js?v=DEV"></script>
     <script src="/static/js/verify-recovery-code.js?v=DEV"></script>
 </body>
 </html>

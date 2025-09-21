@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>GastoSmart — Dashboard</title>
-  <!-- Estilos del dashboard -->
-  <link rel="stylesheet" href="/static/css/dashboard/main/dashboard-main.css?v=DEV">
+  <!-- Estilos consolidados del dashboard -->
+  <link rel="stylesheet" href="/static/css/dashboard.css?v=DEV">
 </head>
 <body>
   <div class="dashboard-layout">
@@ -93,30 +93,118 @@
           <h1 class="page-title">GastoSmart</h1>
           <div class="budget-pill">
             <span class="budget-label">Presupuesto:</span>
-            <span class="budget-amount">$ 2.000.000</span>
+            <span class="budget-amount">$ 5.000.000</span>
           </div>
-          <div class="user-profile">
-            <div class="user-avatar">
-              <span>K</span>
-            </div>
-            <div class="user-info">
-              <span class="user-name">kevin</span>
-              <span class="user-role">Usuario</span>
+          <div class="header-right">
+            <button class="notification-btn" aria-label="Notificaciones">
+              <svg class="notification-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+              </svg>
+            </button>
+            <div class="user-dropdown">
+              <button class="user-profile-btn" onclick="toggleUserDropdown()">
+                <div class="user-avatar">
+                  <span>K</span>
+                </div>
+                <div class="user-info">
+                  <span class="user-name">Kevin</span>
+                  <span class="user-role">Usuario</span>
+                </div>
+                <svg class="dropdown-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              </button>
             </div>
           </div>
         </div>
       </header>
       
-      <!-- Área de contenido principal (vacía - contenedor para futuras tarjetas) -->
+      <!-- Área de contenido principal -->
       <div class="dashboard-content">
         <div class="content-container">
-          <!-- Este contenedor estará listo para inyectar las tarjetas del dashboard -->
-          <!-- Por ahora queda vacío según las especificaciones -->
+          <!-- Tarjetas principales -->
+          <div class="dashboard-cards">
+            <!-- Saldo Total -->
+            <div class="dashboard-card card-balance">
+              <div class="card-header">
+                <h3 class="card-title">Saldo Total</h3>
+                <span class="card-trend positive">+3.2%</span>
+              </div>
+              <div class="card-content">
+                <div class="card-amount">$ 0</div>
+                <div class="card-details">
+                  <span class="detail-item income">Ingreso <span class="amount">$ 0</span></span>
+                  <span class="detail-item expense">Gasto <span class="amount">$ 0</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ahorro Total -->
+            <div class="dashboard-card card-savings">
+              <div class="card-header">
+                <h3 class="card-title">Ahorro Total</h3>
+                <span class="card-trend positive">+1.8%</span>
+              </div>
+              <div class="card-content">
+                <div class="card-amount">$ 1.500.000</div>
+                <div class="card-subtitle">Tendencia de ahorro mensual</div>
+              </div>
+              <div class="card-chart">
+                <!-- Placeholder for chart -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Segunda fila de contenido -->
+          <div class="dashboard-row">
+            <!-- Meta Principal -->
+            <div class="dashboard-card card-goal">
+              <div class="card-header">
+                <h3 class="card-title">Meta Principal</h3>
+                <svg class="card-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="card-content">
+                <div class="goal-title">Ahorrar para comprar casa</div>
+                <div class="goal-amount">$ 0 <span class="goal-target">/ $ 120.000.000</span></div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-info">
+                  <span>0% alcanzado</span>
+                  <span>Faltan $ 120.000.000 para completar</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Descripción de los Gastos -->
+            <div class="dashboard-card card-expenses">
+              <div class="card-header">
+                <h3 class="card-title">Descripción de los Gastos</h3>
+                <svg class="card-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                </svg>
+              </div>
+              <div class="card-content">
+                <div class="expenses-empty">
+                  <div class="empty-chart">
+                    <div class="donut-chart">
+                      <div class="donut-placeholder"></div>
+                    </div>
+                  </div>
+                  <div class="empty-message">No hay gastos registrados este mes</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
+  <script src="/static/js/error-handler.js?v=DEV"></script>
+  <script src="/static/js/user-state.js?v=1.0"></script>
   <script src="/static/js/dashboard.js?v=DEV"></script>
 </body>
 </html>

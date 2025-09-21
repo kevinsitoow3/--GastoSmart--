@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Mostrar indicador de carga
                 setLoginLoading(true);
                 
+                console.log('[DEBUG] Attempting login with email:', email);
+                console.log('[DEBUG] Password length:', password.length);
+                
                 // Realizar petición de login
                 const response = await fetch(`${API_BASE_URL}/users/login`, {
                     method: 'POST',
@@ -54,29 +57,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 });
                 
+                console.log('[DEBUG] Login response status:', response.status);
+                
                 if (response.ok) {
                     const user = await response.json();
                     
                     // Guardar datos del usuario en localStorage
                     localStorage.setItem('user', JSON.stringify(user));
-                    localStorage.setItem('token', user.token || ''); // Si el backend devuelve un token
+                    localStorage.setItem('token', user.token || '');
                     
                     // Mostrar mensaje de éxito
                     showLoginSuccess('¡Login exitoso! Redirigiendo...');
                     
                     // Redirigir según el estado del usuario después de 1.5 segundos
                     setTimeout(() => {
-                        if (user.initial_budget && user.budget_period) {
-                            // Si ya tiene presupuesto configurado, ir al dashboard
-                            window.location.href = '/dashboard';
-                        } else {
-                            // Si no tiene presupuesto, ir a configurarlo
-                            window.location.href = '/initial-budget';
-                        }
+                        redirectUserAfterLogin(user);
                     }, 1500);
                     
                 } else {
                     const error = await response.json();
+                    console.log('[DEBUG] Login error response:', error);
                     showLoginError(error.detail || 'Credenciales incorrectas. Verifica tu email y contraseña.');
                 }
                 
@@ -157,5 +157,27 @@ function togglePassword(fieldId) {
     } else {
         passwordField.type = 'password';
         eyeIcon.classList.remove('eye-open');
+    }
+}
+
+// Función para redirigir al usuario después del login según su estado
+function redirectUserAfterLogin(user) {
+    console.log('[DEBUG] Redirecting user after login:', user);
+    
+    try {
+        // Usar la función global para verificar el estado del presupuesto
+        if (hasBudgetConfigured(user)) {
+            // Usuario ya tiene presupuesto configurado -> Dashboard
+            console.log('[DEBUG] Redirecting to dashboard');
+            window.location.href = '/dashboard';
+        } else {
+            // Usuario no tiene presupuesto configurado -> Initial Budget
+            console.log('[DEBUG] Redirecting to initial budget setup');
+            window.location.href = '/initial-budget';
+        }
+    } catch (error) {
+        console.error('[ERROR] Error in redirect logic:', error);
+        // Fallback: ir al dashboard por defecto
+        window.location.href = '/dashboard';
     }
 }

@@ -4,47 +4,48 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>GastoSmart — Configurar Presupuesto Inicial</title>
-  <!-- Estilos de autenticación -->
-  <link rel="stylesheet" href="/static/css/auth/main/auth-main.css?v=DEV">
-  <link rel="stylesheet" href="/static/css/auth/pages/initial-budget.css?v=DEV">
+  <!-- Estilos consolidados de initial-budget -->
+  <link rel="stylesheet" href="/static/css/initial-budget.css?v=DEV">
 </head>
 <body>
   <main class="container budget-setup-container">
     <!-- Formulario (izquierda) -->
     <div class="budget-setup__form">
-          <div class="form-container">
+      <div class="form-container">
+        <form id="budgetForm" class="budget-form">
+          <div class="form-header">
             <h2>Configuremos tu Presupuesto</h2>
             <p class="form-subtitle">Para comenzar, necesitamos conocer tus ingresos y metas financieras</p>
+          </div>
+          
+          <!-- Sección de Ingresos -->
+          <div class="form-section">
+            <h3>💰 Ingresos</h3>
             
-            <form id="budgetForm" class="budget-form">
-              <!-- Sección de Ingresos -->
-              <div class="form-section">
-                <h3>💰 Ingresos</h3>
-                
-                <div class="input-group">
-                  <label for="incomeAmount">Ingresa tu salario mensual</label>
-                  <div class="currency-input-group">
-                    <div class="currency-prefix" aria-hidden="true">
-                      <span class="currency-symbol">COP $</span>
-                    </div>
-                    <input type="text" id="incomeAmount" name="incomeAmount" placeholder="1,500,000" class="currency-input" inputmode="numeric" required aria-describedby="income-help">
+              <div class="input-group">
+                <label for="incomeAmount">Ingresa tu salario mensual</label>
+                <div class="currency-input-group">
+                  <div class="currency-prefix" aria-hidden="true">
+                    <span class="currency-symbol">COP $</span>
                   </div>
-                  <small class="input-help" id="income-help">Monto mínimo: $100,000 COP</small>
+                  <input type="text" id="incomeAmount" name="incomeAmount" placeholder="1,500,000" class="currency-input" inputmode="numeric" required aria-describedby="income-help">
                 </div>
-
-                <div class="input-group">
-                  <label for="payFrequency">Frecuencia de pago</label>
-                  <select id="payFrequency" name="payFrequency">
-                    <option value="monthly">Mensual</option>
-                    <option value="biweekly">Quincenal</option>
-                  </select>
-                </div>
+                <small class="input-help" id="income-help">Monto mínimo: $100,000 COP</small>
               </div>
 
-              <!-- Sección de Metas -->
-              <div class="form-section">
-                <h3>🎯 Meta Financiera</h3>
-                <p class="section-subtitle">¿Qué te gustaría lograr con tu dinero?</p>
+            <div class="input-group">
+              <label for="payFrequency">Frecuencia de pago</label>
+              <select id="payFrequency" name="payFrequency">
+                <option value="mensual">Mensual</option>
+                <option value="quincenal">Quincenal</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sección de Metas -->
+          <div class="form-section">
+            <h3>🎯 Meta Financiera</h3>
+            <p class="section-subtitle">¿Qué te gustaría lograr con tu dinero?</p>
                 
                 <div class="goals-grid">
                   <label class="goal-card">
@@ -111,24 +112,25 @@
                     <small class="input-help" id="goal-amount-help">¿Cuánto quieres ahorrar para esta meta?</small>
                   </div>
                   
-                  <div class="input-group">
-                    <label for="goalTimeframe">Plazo estimado *</label>
-                    <select id="goalTimeframe" name="goalTimeframe" required>
-                      <option value="">Selecciona un plazo</option>
-                      <option value="3">3 meses</option>
-                      <option value="6">6 meses</option>
-                      <option value="12">1 año</option>
-                      <option value="24">2 años</option>
-                      <option value="36">3 años</option>
-                      <option value="48">4 años</option>
-                      <option value="60">5 años</option>
-                      <option value="72">6 años</option>
-                      <option value="84">7 años</option>
-                      <option value="96">8 años</option>
-                      <option value="108">9 años</option>
-                      <option value="120">10 años</option>
-                    </select>
-                  </div>
+                          <div class="input-group">
+                            <label for="goalTimeframe">Plazo estimado *</label>
+                            <select id="goalTimeframe" name="goalTimeframe" required>
+                              <option value="">Selecciona un plazo</option>
+                              <option value="3">3 meses</option>
+                              <option value="6">6 meses</option>
+                              <option value="12">1 año</option>
+                              <option value="24">2 años</option>
+                              <option value="36">3 años</option>
+                              <option value="48">4 años</option>
+                              <option value="60">5 años</option>
+                              <option value="72">6 años</option>
+                              <option value="84">7 años</option>
+                              <option value="96">8 años</option>
+                              <option value="108">9 años</option>
+                              <option value="120">10 años</option>
+                              <option value="custom">Otro</option>
+                            </select>
+                          </div>
                   
                   <div class="input-group" id="customTimeframeGroup" style="display: none;">
                     <label for="customTimeframe">Plazo personalizado (meses) *</label>
@@ -137,65 +139,66 @@
                   </div>
                 </div>
                 
-                <!-- Campos adicionales para meta "Otro" -->
-                <div class="other-goal-subform" id="otherGoalInput" style="display: none;">
-                  <div class="subform-header">
-                    <h4>Define tu meta personalizada</h4>
-                    <p>Crea tu objetivo financiero único</p>
+            <!-- Campos adicionales para meta "Otro" -->
+            <div class="other-goal-subform" id="otherGoalInput" style="display: none;">
+              <div class="subform-header">
+                <h4>Define tu meta personalizada</h4>
+                <p>Crea tu objetivo financiero único</p>
+              </div>
+              
+              <div class="input-group">
+                <label for="otherGoalName">Nombre de tu meta *</label>
+                <input type="text" id="otherGoalName" name="otherGoalName" placeholder="Ej: Moto nueva, Negocio propio" maxlength="50" required aria-describedby="otherGoalName-help" class="text-input">
+                <small class="input-help" id="otherGoalName-help"><span id="nameCounter" aria-live="polite">0</span>/50 caracteres</small>
+              </div>
+              
+              <div class="input-group">
+                <label for="otherGoalAmount">Monto objetivo *</label>
+                <div class="currency-input-group">
+                  <div class="currency-prefix" aria-hidden="true">
+                    <span class="currency-symbol">COP $</span>
                   </div>
-                  
-                  <div class="input-group">
-                    <label for="otherGoalName">Nombre de tu meta *</label>
-                    <input type="text" id="otherGoalName" name="otherGoalName" placeholder="Ej: Moto nueva, Negocio propio" maxlength="50" required aria-describedby="otherGoalName-help">
-                    <small class="input-help" id="otherGoalName-help"><span id="nameCounter" aria-live="polite">0</span>/50 caracteres</small>
-                  </div>
-                  
-                  <div class="input-group">
-                    <label for="otherGoalAmount">Monto objetivo *</label>
-                    <div class="currency-input-group">
-                      <div class="currency-prefix" aria-hidden="true">
-                        <span class="currency-symbol">COP $</span>
-                      </div>
-                      <input type="text" id="otherGoalAmount" name="otherGoalAmount" placeholder="5,000,000" class="currency-input" inputmode="numeric" required aria-describedby="other-goal-amount-help">
-                    </div>
-                    <small class="input-help" id="other-goal-amount-help">¿Cuánto quieres ahorrar para esta meta?</small>
-                  </div>
-                  
-                  <div class="input-group">
-                    <label for="otherGoalTimeframe">Plazo estimado *</label>
-                    <select id="otherGoalTimeframe" name="otherGoalTimeframe" required>
-                      <option value="">Selecciona un plazo</option>
-                      <option value="3">3 meses</option>
-                      <option value="6">6 meses</option>
-                      <option value="12">1 año</option>
-                      <option value="24">2 años</option>
-                      <option value="36">3 años</option>
-                      <option value="48">4 años</option>
-                      <option value="60">5 años</option>
-                      <option value="72">6 años</option>
-                      <option value="84">7 años</option>
-                      <option value="96">8 años</option>
-                      <option value="108">9 años</option>
-                      <option value="120">10 años</option>
-                    </select>
-                  </div>
-                  
-                  <div class="input-group" id="otherCustomTimeframeGroup" style="display: none;">
-                    <label for="otherCustomTimeframe">Plazo personalizado (meses) *</label>
-                    <input type="number" id="otherCustomTimeframe" name="otherCustomTimeframe" min="1" max="120" placeholder="24" aria-describedby="other-custom-timeframe-help">
-                    <small class="input-help" id="other-custom-timeframe-help">Entre 1 y 120 meses</small>
-                  </div>
-                  
+                  <input type="text" id="otherGoalAmount" name="otherGoalAmount" placeholder="5,000,000" class="currency-input" inputmode="numeric" required aria-describedby="other-goal-amount-help">
                 </div>
+                <small class="input-help" id="other-goal-amount-help">¿Cuánto quieres ahorrar para esta meta?</small>
+              </div>
+              
+                          <div class="input-group">
+                            <label for="otherGoalTimeframe">Plazo estimado *</label>
+                            <select id="otherGoalTimeframe" name="otherGoalTimeframe" required>
+                              <option value="">Selecciona un plazo</option>
+                              <option value="3">3 meses</option>
+                              <option value="6">6 meses</option>
+                              <option value="12">1 año</option>
+                              <option value="24">2 años</option>
+                              <option value="36">3 años</option>
+                              <option value="48">4 años</option>
+                              <option value="60">5 años</option>
+                              <option value="72">6 años</option>
+                              <option value="84">7 años</option>
+                              <option value="96">8 años</option>
+                              <option value="108">9 años</option>
+                              <option value="120">10 años</option>
+                              <option value="custom">Otro</option>
+                            </select>
+                          </div>
+              
+              <div class="input-group" id="otherCustomTimeframeGroup" style="display: none;">
+                <label for="otherCustomTimeframe">Plazo personalizado (meses) *</label>
+                <input type="number" id="otherCustomTimeframe" name="otherCustomTimeframe" min="1" max="120" placeholder="24" aria-describedby="other-custom-timeframe-help" class="text-input">
+                <small class="input-help" id="other-custom-timeframe-help">Entre 1 y 120 meses</small>
+              </div>
+            </div>
                 
 
               </div>
 
+              <!-- Botón Enviar -->
               <div class="form-actions">
                 <button type="button" id="submitBudgetBtn" class="btn btn--primary btn--full" 
                         aria-label="Enviar información del presupuesto" 
                         onclick="onGenerateInitialBudget()">
-                  <span class="btn-text">Configurar mi Presupuesto</span>
+                  <span class="btn-text">Enviar</span>
                   <span class="btn-spinner" style="display: none;"></span>
                 </button>
               </div>
@@ -293,6 +296,7 @@
   </main>
 
   <script src="/static/js/auth.js?v=DEV"></script>
-    <script src="/static/js/initial-budget.js?v=DEV"></script>
+  <script src="/static/js/user-state.js?v=1.0"></script>
+  <script src="/static/js/initial-budget.js?v=2.2"></script>
 </body>
 </html>

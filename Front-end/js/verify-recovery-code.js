@@ -210,15 +210,55 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json(); // Convertir la respuesta a JSON
 
             if (response.ok) { // Si la respuesta es exitosa
-                showSuccess("¡Código verificado exitosamente! Redirigiendo al login...");
+                // Obtener la nueva contraseña del localStorage
+                const newPassword = localStorage.getItem('newPassword');
+                
+                if (newPassword) {
+                    console.log('[DEBUG] Attempting to reset password for:', resetEmail);
+                    console.log('[DEBUG] New password length:', newPassword.length);
+                    
+                    // Actualizar la contraseña en el servidor
+                    try {
+                        const resetResponse = await fetch(`${API_URL}/users/reset-password`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                email: resetEmail,
+                                new_password: newPassword
+                            }),
+                        });
 
-                // Limpiar email del localStorage
-                localStorage.removeItem('resetEmail');
-
-                // Redirigir al login después de 2 segundos
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
+                        if (resetResponse.ok) {
+                            console.log('[DEBUG] Password reset successful!');
+                            showSuccess("¡Contraseña actualizada exitosamente! Redirigiendo al login...");
+                            
+                            // Limpiar datos del localStorage
+                            localStorage.removeItem('resetEmail');
+                            localStorage.removeItem('newPassword');
+                            
+                            console.log('[DEBUG] Redirecting to login with email:', resetEmail);
+                            
+                            // Redirigir al login después de 2 segundos
+                            setTimeout(() => {
+                                window.location.href = '/login';
+                            }, 2000);
+                        } else {
+                            const resetData = await resetResponse.json();
+                            showError(resetData.detail || "Error al actualizar la contraseña");
+                        }
+                    } catch (resetError) {
+                        console.error('Error al actualizar contraseña:', resetError);
+                        showError("Error al actualizar la contraseña. Intenta nuevamente.");
+                    }
+                } else {
+                    showError("No se encontró la nueva contraseña. Intenta el proceso nuevamente.");
+                    // Redirigir a password-reset si no hay contraseña guardada
+                    setTimeout(() => {
+                        window.location.href = '/password-reset';
+                    }, 2000);
+                }
 
             } else {
                 // Mostrar error específico del servidor con información de intentos
