@@ -86,14 +86,18 @@ async def login_user(
     Raises:
         HTTPException: Si las credenciales son inválidas
     """
+    print(f"[DEBUG] Login attempt for email: {login_data.email}")
+    
     user = await user_ops.authenticate_user(login_data)
     
     if not user:
+        print(f"[DEBUG] Login failed for email: {login_data.email}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales inválidas"
         )
     
+    print(f"[DEBUG] Login successful for user: {user.email}")
     return user
 
 @router.get("/{user_id}", response_model=UserResponse)
@@ -248,6 +252,16 @@ async def send_verification_code(
                     detail="El correo electrónico ya está registrado y verificado"
                 )
         
+        # Para recuperación de contraseña, verificar que el usuario existe
+        elif request.purpose == "password_recovery":
+            # Verificación directa en la base de datos para mejor rendimiento
+            user_doc = await user_ops.collection.find_one({"email": request.email})
+            if not user_doc:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="No se encontró una cuenta asociada a este correo electrónico"
+                )
+        
         # Enviar código de verificación
         success = await user_ops.send_verification_code(
             request.email, 
@@ -302,6 +316,62 @@ async def verify_code(
     except HTTPException:
         raise
     except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno del servidor"
+        )
+
+@router.post("/reset-password")
+async def reset_password(
+    request: dict,
+    user_ops: UserOperations = Depends(get_user_operations)):
+    """
+    Restablecer contraseña después de verificar código
+    
+    Actualiza la contraseña del usuario después de que se haya
+    verificado exitosamente el código de recuperación.
+    """
+    try:
+        email = request.get("email")
+        new_password = request.get("new_password")
+        
+        print(f"[DEBUG] Reset password request for email: {email}")
+        
+        if not email or not new_password:
+            print(f"[DEBUG] Missing email or password: email={email}, password={'***' if new_password else None}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email y nueva contraseña son requeridos"
+            )
+        
+        # Verificar que el usuario existe (cualquier estado)
+        user = await user_ops.get_user_by_email_any_status(email)
+        print(f"[DEBUG] User found: {user is not None}")
+        if not user:
+            print(f"[DEBUG] User not found for email: {email}")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Usuario no encontrado"
+            )
+        
+        print(f"[DEBUG] User found: {user.email}, is_active: {user.is_active}")
+        
+        # Actualizar la contraseña
+        success = await user_ops.update_password(email, new_password)
+        print(f"[DEBUG] Password update success: {success}")
+        
+        if success:
+            return {"message": "Contraseña actualizada exitosamente"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Error al actualizar la contraseña"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[DEBUG] Exception in reset_password: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error interno del servidor"

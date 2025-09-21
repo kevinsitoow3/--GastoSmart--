@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Mostrar indicador de carga
                 setLoginLoading(true);
                 
+                console.log('[DEBUG] Attempting login with email:', email);
+                console.log('[DEBUG] Password length:', password.length);
+                
                 // Realizar petición de login
                 const response = await fetch(`${API_BASE_URL}/users/login`, {
                     method: 'POST',
@@ -53,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         password: password
                     })
                 });
+                
+                console.log('[DEBUG] Login response status:', response.status);
                 
                 if (response.ok) {
                     const user = await response.json();
@@ -77,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                 } else {
                     const error = await response.json();
+                    console.log('[DEBUG] Login error response:', error);
                     showLoginError(error.detail || 'Credenciales incorrectas. Verifica tu email y contraseña.');
                 }
                 

@@ -77,7 +77,7 @@ class UserOperations:
     
     async def get_user_by_email(self, email: str) -> Optional[UserResponse]:
         """
-        Obtener usuario por correo electrónico
+        Obtener usuario por correo electrónico (solo usuarios activos)
         
         Args:
             email: Correo electrónico del usuario
@@ -88,6 +88,24 @@ class UserOperations:
         user_doc = await self.collection.find_one({
             "email": email,
             "is_active": True
+        })
+        
+        if user_doc:
+            return self._user_doc_to_response(user_doc)
+        return None
+    
+    async def get_user_by_email_any_status(self, email: str) -> Optional[UserResponse]:
+        """
+        Obtener usuario por correo electrónico (cualquier estado)
+        
+        Args:
+            email: Correo electrónico del usuario
+            
+        Returns:
+            UserResponse o None si no se encuentra
+        """
+        user_doc = await self.collection.find_one({
+            "email": email
         })
         
         if user_doc:
@@ -126,20 +144,36 @@ class UserOperations:
         Returns:
             UserResponse si la autenticación es exitosa, None en caso contrario
         """
+        print(f"[DEBUG] Authenticating user: {login_data.email}")
+        
         # Buscar usuario por correo
         user_doc = await self.collection.find_one({
             "email": login_data.email,
             "is_active": True
         })
         
-        if user_doc and self._verify_password(login_data.password, user_doc["password"]):
-            # Actualizar último acceso
-            await self.collection.update_one(
-                {"_id": user_doc["_id"]},
-                {"$set": {"last_access": datetime.now()}}
-            )
+        print(f"[DEBUG] User found in auth: {user_doc is not None}")
+        
+        if user_doc:
+            print(f"[DEBUG] User is_active: {user_doc.get('is_active')}, email_verified: {user_doc.get('email_verified')}")
+            password_valid = self._verify_password(login_data.password, user_doc["password"])
+            print(f"[DEBUG] Password valid: {password_valid}")
             
-            return self._user_doc_to_response(user_doc)
+            if password_valid:
+                # Actualizar último acceso
+                await self.collection.update_one(
+                    {"_id": user_doc["_id"]},
+                    {"$set": {"last_access": datetime.now()}}
+                )
+                
+                return self._user_doc_to_response(user_doc)
+        else:
+            # Buscar usuario sin restricción de estado para debug
+            any_user = await self.collection.find_one({"email": login_data.email})
+            if any_user:
+                print(f"[DEBUG] User exists but is_active: {any_user.get('is_active')}, email_verified: {any_user.get('email_verified')}")
+            else:
+                print(f"[DEBUG] User does not exist in database")
         
         return None
     
@@ -282,6 +316,42 @@ class UserOperations:
             )
             return result.modified_count > 0
         except Exception:
+            return False
+    
+    async def update_password(self, email: str, new_password: str) -> bool:
+        """
+        Actualizar contraseña del usuario
+        
+        Args:
+            email: Correo electrónico del usuario
+            new_password: Nueva contraseña en texto plano
+            
+        Returns:
+            bool: True si se actualizó correctamente
+        """
+        try:
+            print(f"[DEBUG] Updating password for email: {email}")
+            
+            # Encriptar la nueva contraseña
+            hashed_password = self._hash_password(new_password)
+            print(f"[DEBUG] Password hashed successfully")
+            
+            # Actualizar la contraseña y activar la cuenta en la base de datos
+            result = await self.collection.update_one(
+                {"email": email},
+                {
+                    "$set": {
+                        "password": hashed_password,
+                        "password_updated": datetime.now(),
+                        "is_active": True,
+                        "email_verified": True
+                    }
+                }
+            )
+            print(f"[DEBUG] Update result - matched: {result.matched_count}, modified: {result.modified_count}")
+            return result.modified_count > 0
+        except Exception as e:
+            print(f"[DEBUG] Exception in update_password: {str(e)}")
             return False
     
     def _hash_password(self, password: str) -> str:
